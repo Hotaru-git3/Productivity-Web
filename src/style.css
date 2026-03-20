@@ -1,0 +1,72 @@
+/* Panggil Tailwind v4 */
+@import "tailwindcss";
+
+/* 1. Setup Warna Custom ala Tailwind v4 */
+@theme {
+  --color-primary: #6366F1;
+  --color-secondary: #3B82F6;
+  --color-darkBg: #121212;
+  --color-darkCard: #1E1E1E;
+}
+
+#openSidebar {
+  display: block;
+}
+
+#mainDashboard {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#mainDashboard.flex {
+  opacity: 1;
+}
+
+#sidebar {
+  transition: transform 0.3s ease;
+}
+
+/* 2. Setup Dark Mode berbasis class (Biar tombol toggle jalan) */
+@custom-variant dark (&:is(.dark *));
+
+/* 3. Custom CSS Scrollbar & Animasi */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Style Tab Aktif */
+.active-tab {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Style Tab Aktif pas Dark Mode */
+.dark .active-tab {
+    background-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Pastikan sidebar desktop selalu terlihat dan tombol hamburger hilang */
+@media (min-width: 1024px) {
+  #sidebar {
+    position: relative !important;
+    transform: translateX(0) !important;
+  }
+
+  #openSidebar,
+  #toggleSidebar {
+    display: none !important;
+  }
+}
+.dark .active-tab {
+    background-color: rgba(99, 102, 241, 0.2);
+}
