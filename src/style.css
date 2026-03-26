@@ -3,15 +3,22 @@
 
 /* 1. Setup Warna Custom ala Tailwind v4 */
 @theme {
-  --color-primary: #6366F1;
-  --color-secondary: #3B82F6;
+  --color-primary: #6366f1;
+  --color-secondary: #3b82f6;
   --color-darkBg: #121212;
-  --color-darkCard: #1E1E1E;
+  --color-darkCard: #1e1e1e;
 }
 
 #openSidebar {
   display: block;
 }
+
+#overlay {
+  /* Transisi khusus buat fade in/out */
+  transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+
 
 #mainDashboard {
   opacity: 0;
@@ -22,37 +29,52 @@
 }
 
 #sidebar {
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
 }
 
 /* 2. Setup Dark Mode berbasis class (Biar tombol toggle jalan) */
 @custom-variant dark (&:is(.dark *));
 
 /* 3. Custom CSS Scrollbar & Animasi */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
 
 .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out forwards;
+  animation: fadeIn 0.3s ease-in-out forwards;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Style Tab Aktif */
 .active-tab {
-    background-color: rgba(99, 102, 241, 0.1);
-    color: var(--color-primary);
-    font-weight: 600;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 /* Style Tab Aktif pas Dark Mode */
 .dark .active-tab {
-    background-color: rgba(99, 102, 241, 0.2);
+  background-color: rgba(99, 102, 241, 0.2);
 }
 
 /* Pastikan sidebar desktop selalu terlihat dan tombol hamburger hilang */
@@ -68,5 +90,200 @@
   }
 }
 .dark .active-tab {
-    background-color: rgba(99, 102, 241, 0.2);
+  background-color: rgba(99, 102, 241, 0.2);
+}
+
+button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+.darkCard {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.darkCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile-friendly styles */
+@media (max-width: 640px) {
+  .line-clamp-4 {
+    -webkit-line-clamp: 3;
+  }
+
+  /* Touch targets lebih besar */
+  button,
+  [onclick] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Card notes lebih nyaman di-tap */
+  .notes-grid .group {
+    cursor: pointer;
+  }
+
+  /* Music player mobile */
+  #musicIframeContainer {
+    width: 280px !important;
+    height: 160px !important;
+    bottom: 10px !important;
+    right: 10px !important;
+  }
+}
+
+/* Active state untuk mobile */
+@media (hover: none) and (pointer: coarse) {
+  .active\:bg-gray-100:active {
+    background-color: #f3f4f6;
+  }
+  .dark .active\:bg-gray-700:active {
+    background-color: #374151;
+  }
+}
+
+#heatmapGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#heatmapGrid div {
+  transition: all 0.2s ease;
+}
+
+#heatmapGrid div:hover {
+  transform: scale(1.1);
+}
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for menu items */
+.nav-btn {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6366F1, #8B5CF6);
+  transition: width 0.3s ease;
+}
+
+.nav-btn:hover::after {
+  width: 100%;
+}
+
+/* Active tab indicator */
+.nav-btn.active-tab {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-left: 3px solid #6366F1;
+}
+
+.dark .nav-btn.active-tab {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border-left-color: #818CF8;
+}
+
+/* Fade in animation for tab content */
+.tab-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Touch feedback for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .nav-btn:active {
+    transform: scale(0.98);
+    background-color: rgba(99, 102, 241, 0.1);
+  }
+  
+  button:active {
+    transform: scale(0.97);
+  }
+}
+
+/* GLOBAL CLICKABLE POINTER 
+   Biar semua yang bisa diklik otomatis muncul ikon tangan
+*/
+
+/* 1. Elemen standar yang emang buat interaksi */
+button, 
+a, 
+label, 
+select,
+input[type="button"], 
+input[type="submit"], 
+input[type="checkbox"], 
+input[type="radio"] {
+  cursor: pointer !important;
+}
+
+/* 2. Elemen custom yang lo kasih fungsi klik lewat JS (onclick) */
+[onclick], 
+.nav-btn, 
+.music-btn, 
+.active-tab,
+#overlay,
+#heatmapGrid div,
+#imagePreviewContainer button {
+  cursor: pointer !important;
+}
+
+/* 3. Kasih feedback visual dikit biar makin smooth */
+button:hover, 
+.nav-btn:hover, 
+[onclick]:hover {
+  filter: brightness(1.1);
+  transition: filter 0.2s ease;
+}
+
+/* Khusus buat checkbox di Task Manager biar kerasa "ceklek"-nya */
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+
+button:active, .nav-btn:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
 }
