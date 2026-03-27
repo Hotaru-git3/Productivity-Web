@@ -6,6 +6,8 @@ import { AppState } from "./state";
 let pomoInterval = null;
 let pomoTime = POMODORO_DURATION;
 let alarmAudio = null;
+let lastTimestamp = null;
+let accumulatedTime = 0; // 🔥 Tambahin buat akumulasi
 
 export const Pomodoro = {
   init() {
@@ -35,10 +37,13 @@ export const Pomodoro = {
     const seconds = (pomoTime % 60).toString().padStart(2, "0");
     const display = document.getElementById("pomodoroDisplay");
     if (display) display.innerText = `${minutes}:${seconds}`;
+    
+    document.title = `🍅 ${minutes}:${seconds} - Co-Dash`;
   },
 
   start() {
     if (pomoInterval) {
+      // PAUSE
       clearInterval(pomoInterval);
       pomoInterval = null;
       const btn = document.getElementById("pomodoroStart");
@@ -48,7 +53,9 @@ export const Pomodoro = {
         btn.classList.add("bg-primary");
       }
       this.stopAlarm();
+      document.title = "Co-Dash | Productivity Dashboard";
     } else {
+      // START or RESUME
       const btn = document.getElementById("pomodoroStart");
       if (btn) {
         btn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
@@ -56,23 +63,32 @@ export const Pomodoro = {
         btn.classList.add("bg-yellow-500");
       }
 
+      // 🔥 Pakai lastTimestamp yang terakhir (kalau resume) atau sekarang (kalau start baru)
+      if (lastTimestamp === null) {
+        lastTimestamp = Date.now();
+      }
+      
       pomoInterval = setInterval(() => {
-        if (pomoTime > 0) {
-          pomoTime--;
+        const now = Date.now();
+        const elapsed = Math.floor((now - lastTimestamp) / 1000);
+        
+        if (elapsed >= 1 && pomoTime > 0) {
+          pomoTime = Math.max(0, pomoTime - elapsed);
+          lastTimestamp = now;
           this.updateDisplay();
-        } else {
-          this.reset();
-          showToast("⏰ Waktu fokus abis! Istirahat dulu sana.", "success");
-          recordActivity(AppState.activityLog);
-          this.playAlarm();
+          
+          if (pomoTime === 0) {
+            this.reset();
+            showToast("⏰ Waktu fokus abis! Istirahat dulu sana.", "success");
+            recordActivity(AppState.activityLog);
+            this.playAlarm();
 
-          if (typeof window.dispatchEvent === "function") {
             window.dispatchEvent(new CustomEvent("pomodoro-complete", {
-              detail: { message: "Waktu fokus 25 menit sudah habis. Waktunya istirahat!" }
+              detail: { message: "Waktu fokus selesai! Waktunya istirahat!" }
             }));
           }
         }
-      }, 1000);
+      }, 200);
     }
   },
 
@@ -82,8 +98,10 @@ export const Pomodoro = {
       pomoInterval = null;
     }
     pomoTime = POMODORO_DURATION;
+    lastTimestamp = null; // 🔥 Reset timestamp
     this.updateDisplay();
     this.stopAlarm();
+    document.title = "Co-Dash | Productivity Dashboard";
 
     const btn = document.getElementById("pomodoroStart");
     if (btn) {
