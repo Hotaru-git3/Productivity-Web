@@ -7,21 +7,20 @@ let pomoInterval = null;
 let pomoTime = POMODORO_DURATION;
 let alarmAudio = null;
 let lastTimestamp = null;
-let accumulatedTime = 0; // 🔥 Tambahin buat akumulasi
 
 export const Pomodoro = {
   init() {
-  this.updateDisplay(false); // 🔥 Jangan update title saat load
-  this.initAlarmSound();
+    this.updateDisplay();
+    this.initAlarmSound();
 
-  const startBtn = document.getElementById("pomodoroStart");
-  const resetBtn = document.getElementById("pomodoroReset");
-  const stopAlarmBtn = document.getElementById("stopAlarmBtn");
+    const startBtn = document.getElementById("pomodoroStart");
+    const resetBtn = document.getElementById("pomodoroReset");
+    const stopAlarmBtn = document.getElementById("stopAlarmBtn");
 
-  startBtn?.addEventListener("click", () => this.start());
-  resetBtn?.addEventListener("click", () => this.reset());
-  stopAlarmBtn?.addEventListener("click", () => this.stopAlarm());
-},
+    startBtn?.addEventListener("click", () => this.start());
+    resetBtn?.addEventListener("click", () => this.reset());
+    stopAlarmBtn?.addEventListener("click", () => this.stopAlarm());
+  },
 
   initAlarmSound() {
     alarmAudio = new Audio(ALARM_SOUND_URL);
@@ -32,23 +31,12 @@ export const Pomodoro = {
     };
   },
 
-updateDisplay(updateTitle = true) {
-  const minutes = Math.floor(pomoTime / 60).toString().padStart(2, "0");
-  const seconds = (pomoTime % 60).toString().padStart(2, "0");
-  const display = document.getElementById("pomodoroDisplay");
-  if (display) display.innerText = `${minutes}:${seconds}`;
-  
-  // Update title hanya kalau diminta
-  if (updateTitle) {
-    if (pomoInterval !== null) {
-      // Timer sedang berjalan
-      document.title = `🍅 ${minutes}:${seconds} - Co-Dash`;
-    } else {
-      // Timer tidak berjalan, reset ke default
-      document.title = "Co-Dash | Productivity Dashboard";
-    }
-  }
-},
+  updateDisplay() {
+    const minutes = Math.floor(pomoTime / 60).toString().padStart(2, "0");
+    const seconds = (pomoTime % 60).toString().padStart(2, "0");
+    const display = document.getElementById("pomodoroDisplay");
+    if (display) display.innerText = `${minutes}:${seconds}`;
+  },
 
   start() {
     if (pomoInterval) {
@@ -62,7 +50,6 @@ updateDisplay(updateTitle = true) {
         btn.classList.add("bg-primary");
       }
       this.stopAlarm();
-      document.title = "Co-Dash | Productivity Dashboard";
     } else {
       // START or RESUME
       const btn = document.getElementById("pomodoroStart");
@@ -72,7 +59,7 @@ updateDisplay(updateTitle = true) {
         btn.classList.add("bg-yellow-500");
       }
 
-      // 🔥 Pakai lastTimestamp yang terakhir (kalau resume) atau sekarang (kalau start baru)
+      // Rekam waktu start/resume
       if (lastTimestamp === null) {
         lastTimestamp = Date.now();
       }
@@ -107,10 +94,9 @@ updateDisplay(updateTitle = true) {
       pomoInterval = null;
     }
     pomoTime = POMODORO_DURATION;
-    lastTimestamp = null; // 🔥 Reset timestamp
+    lastTimestamp = null;
     this.updateDisplay();
     this.stopAlarm();
-    document.title = "Co-Dash | Productivity Dashboard";
 
     const btn = document.getElementById("pomodoroStart");
     if (btn) {
