@@ -7,6 +7,7 @@ let pomoInterval = null;
 let pomoTime = POMODORO_DURATION;
 let alarmAudio = null;
 let lastTimestamp = null;
+let isRunning = false;
 
 export const Pomodoro = {
   init() {
@@ -20,6 +21,15 @@ export const Pomodoro = {
     startBtn?.addEventListener("click", () => this.start());
     resetBtn?.addEventListener("click", () => this.reset());
     stopAlarmBtn?.addEventListener("click", () => this.stopAlarm());
+
+    // 🔥 Deteksi ketika user kembali ke tab
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && isRunning) {
+        // Tab jadi aktif, hitung ulang timestamp
+        lastTimestamp = Date.now();
+        console.log("Tab aktif, timestamp reset");
+      }
+    });
   },
 
   initAlarmSound() {
@@ -43,6 +53,7 @@ export const Pomodoro = {
       // PAUSE
       clearInterval(pomoInterval);
       pomoInterval = null;
+      isRunning = false;
       const btn = document.getElementById("pomodoroStart");
       if (btn) {
         btn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
@@ -59,12 +70,13 @@ export const Pomodoro = {
         btn.classList.add("bg-yellow-500");
       }
 
-      // Rekam waktu start/resume
-      if (lastTimestamp === null) {
-        lastTimestamp = Date.now();
-      }
+      isRunning = true;
+      lastTimestamp = Date.now();
       
-      pomoInterval = setInterval(() => {
+      // 🔥 Pakai requestAnimationFrame + interval hybrid
+      const updateTimer = () => {
+        if (!isRunning) return;
+        
         const now = Date.now();
         const elapsed = Math.floor((now - lastTimestamp) / 1000);
         
@@ -84,7 +96,26 @@ export const Pomodoro = {
             }));
           }
         }
-      }, 200);
+        
+        if (isRunning && pomoTime > 0) {
+          requestAnimationFrame(updateTimer);
+        }
+      };
+      
+      // Mulai loop dengan requestAnimationFrame
+      requestAnimationFrame(updateTimer);
+      
+      // Backup interval setiap 1 detik (buat jaga-jaga)
+      pomoInterval = setInterval(() => {
+        if (!isRunning) return;
+        const now = Date.now();
+        const elapsed = Math.floor((now - lastTimestamp) / 1000);
+        if (elapsed >= 1 && pomoTime > 0) {
+          pomoTime = Math.max(0, pomoTime - elapsed);
+          lastTimestamp = now;
+          this.updateDisplay();
+        }
+      }, 1000);
     }
   },
 
@@ -93,6 +124,7 @@ export const Pomodoro = {
       clearInterval(pomoInterval);
       pomoInterval = null;
     }
+    isRunning = false;
     pomoTime = POMODORO_DURATION;
     lastTimestamp = null;
     this.updateDisplay();
