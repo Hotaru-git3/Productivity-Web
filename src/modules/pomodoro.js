@@ -4,8 +4,8 @@ import { recordActivity } from "../utils/storage";
 import { AppState } from "./state";
 
 let pomoInterval = null;
-let pomoTime = POMODORO_DURATION; // Sisa waktu dalam detik
-let endTime = null; // Waktu absolut kapan timer harusnya kelar
+let pomoTime = POMODORO_DURATION;
+let endTime = null;
 let alarmAudio = null;
 let isRunning = false;
 
@@ -21,16 +21,23 @@ export const Pomodoro = {
     startBtn?.addEventListener("click", () => this.start());
     resetBtn?.addEventListener("click", () => this.reset());
     stopAlarmBtn?.addEventListener("click", () => this.stopAlarm());
-
-    // 🔥 Event visibilitychange dihapus, udah nggak perlu lagi karena pakai Absolute Time
   },
 
   initAlarmSound() {
+    // 🔥 PRIORITAS: File lokal dulu
     alarmAudio = new Audio(ALARM_SOUND_URL);
     alarmAudio.preload = "auto";
+    
+    // Kalau file lokal gagal, fallback ke online + beep
     alarmAudio.onerror = () => {
-      console.warn("Sound file not accessible");
-      alarmAudio = null;
+      console.warn("Local alarm sound not found, using online fallback");
+      alarmAudio = new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3");
+      alarmAudio.preload = "auto";
+      
+      alarmAudio.onerror = () => {
+        console.warn("Online alarm sound failed, will use Web Audio beep");
+        alarmAudio = null;
+      };
     };
   },
 
@@ -65,25 +72,21 @@ export const Pomodoro = {
       }
 
       isRunning = true;
-      
-      // Tentukan target waktu kelar secara absolut (Waktu Sekarang + Sisa Waktu)
       endTime = Date.now() + (pomoTime * 1000);
 
       pomoInterval = setInterval(() => {
         if (!isRunning) return;
 
         const now = Date.now();
-        // Hitung sisa detik berdasarkan waktu absolut
         const remaining = Math.round((endTime - now) / 1000);
 
         if (remaining > 0) {
           pomoTime = remaining;
           this.updateDisplay();
         } else {
-          // WAKTU HABIS
           pomoTime = 0;
           this.updateDisplay();
-          this.resetTimerState(); // Pakai helper biar rapi
+          this.resetTimerState();
 
           showToast("⏰ Waktu fokus abis! Istirahat dulu sana.", "success");
           recordActivity(AppState.activityLog);
@@ -93,11 +96,10 @@ export const Pomodoro = {
             detail: { message: "Waktu fokus selesai! Waktunya istirahat!" }
           }));
         }
-      }, 500); // Jalanin tiap 500ms biar pas nge-render detik di layar kerasa lebih smooth
+      }, 500);
     }
   },
 
-  // Helper biar nggak ngulang nulis kode reset UI buat tombol
   resetTimerState() {
     if (pomoInterval) {
       clearInterval(pomoInterval);
@@ -121,26 +123,54 @@ export const Pomodoro = {
     this.stopAlarm();
   },
 
+  // 🔥 UPGRADE: Play alarm dengan fallback yang lebih baik
   playAlarm() {
     this.showStopAlarmButton(true);
+    
     if (alarmAudio) {
       alarmAudio.currentTime = 0;
-      alarmAudio.play().catch(e => console.log("Audio play failed:", e));
+      alarmAudio.play().catch(e => {
+        console.log("Audio play failed:", e);
+        this.fallbackBeep();
+      });
     } else {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.value = 880;
-        gainNode.gain.value = 0.5;
-        oscillator.start();
-        setTimeout(() => {
+      this.fallbackBeep();
+    }
+  },
+
+  // 🔥 Fallback beep menggunakan Web Audio API
+  fallbackBeep() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.frequency.value = 880;
+      gainNode.gain.value = 0.5;
+      
+      oscillator.start();
+      
+      // Beep 3x dengan jeda
+      let count = 0;
+      const interval = setInterval(() => {
+        if (count >= 2) {
+          clearInterval(interval);
           oscillator.stop();
           audioCtx.close();
-        }, 1000);
-      } catch (e) { }
+        } else {
+          oscillator.stop();
+          setTimeout(() => {
+            oscillator.start();
+          }, 100);
+          count++;
+        }
+      }, 500);
+      
+    } catch (e) {
+      console.log("Fallback beep failed:", e);
     }
   },
 

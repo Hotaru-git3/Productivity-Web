@@ -21,4 +21,4 @@ export const MUSIC_PLAYLISTS = {
 };
 
 export const POMODORO_DURATION = 25 * 60;
-export const ALARM_SOUND_URL = "https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3";
+export const ALARM_SOUND_URL = "/public/music/alarm.mp3";
