@@ -4,9 +4,9 @@ import { recordActivity } from "../utils/storage";
 import { AppState } from "./state";
 
 let pomoInterval = null;
-let pomoTime = POMODORO_DURATION;
+let pomoTime = POMODORO_DURATION; // Sisa waktu dalam detik
+let endTime = null; // Waktu absolut kapan timer harusnya kelar
 let alarmAudio = null;
-let lastTimestamp = null;
 let isRunning = false;
 
 export const Pomodoro = {
@@ -22,14 +22,7 @@ export const Pomodoro = {
     resetBtn?.addEventListener("click", () => this.reset());
     stopAlarmBtn?.addEventListener("click", () => this.stopAlarm());
 
-    // 🔥 Deteksi ketika user kembali ke tab
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && isRunning) {
-        // Tab jadi aktif, hitung ulang timestamp
-        lastTimestamp = Date.now();
-        console.log("Tab aktif, timestamp reset");
-      }
-    });
+    // 🔥 Event visibilitychange dihapus, udah nggak perlu lagi karena pakai Absolute Time
   },
 
   initAlarmSound() {
@@ -49,11 +42,12 @@ export const Pomodoro = {
   },
 
   start() {
-    if (pomoInterval) {
+    if (isRunning) {
       // PAUSE
       clearInterval(pomoInterval);
       pomoInterval = null;
       isRunning = false;
+
       const btn = document.getElementById("pomodoroStart");
       if (btn) {
         btn.innerHTML = '<i class="fa-solid fa-play"></i> Start';
@@ -71,64 +65,46 @@ export const Pomodoro = {
       }
 
       isRunning = true;
-      lastTimestamp = Date.now();
       
-      // 🔥 Pakai requestAnimationFrame + interval hybrid
-      const updateTimer = () => {
-        if (!isRunning) return;
-        
-        const now = Date.now();
-        const elapsed = Math.floor((now - lastTimestamp) / 1000);
-        
-        if (elapsed >= 1 && pomoTime > 0) {
-          pomoTime = Math.max(0, pomoTime - elapsed);
-          lastTimestamp = now;
-          this.updateDisplay();
-          
-          if (pomoTime === 0) {
-            this.reset();
-            showToast("⏰ Waktu fokus abis! Istirahat dulu sana.", "success");
-            recordActivity(AppState.activityLog);
-            this.playAlarm();
+      // Tentukan target waktu kelar secara absolut (Waktu Sekarang + Sisa Waktu)
+      endTime = Date.now() + (pomoTime * 1000);
 
-            window.dispatchEvent(new CustomEvent("pomodoro-complete", {
-              detail: { message: "Waktu fokus selesai! Waktunya istirahat!" }
-            }));
-          }
-        }
-        
-        if (isRunning && pomoTime > 0) {
-          requestAnimationFrame(updateTimer);
-        }
-      };
-      
-      // Mulai loop dengan requestAnimationFrame
-      requestAnimationFrame(updateTimer);
-      
-      // Backup interval setiap 1 detik (buat jaga-jaga)
       pomoInterval = setInterval(() => {
         if (!isRunning) return;
+
         const now = Date.now();
-        const elapsed = Math.floor((now - lastTimestamp) / 1000);
-        if (elapsed >= 1 && pomoTime > 0) {
-          pomoTime = Math.max(0, pomoTime - elapsed);
-          lastTimestamp = now;
+        // Hitung sisa detik berdasarkan waktu absolut
+        const remaining = Math.round((endTime - now) / 1000);
+
+        if (remaining > 0) {
+          pomoTime = remaining;
           this.updateDisplay();
+        } else {
+          // WAKTU HABIS
+          pomoTime = 0;
+          this.updateDisplay();
+          this.resetTimerState(); // Pakai helper biar rapi
+
+          showToast("⏰ Waktu fokus abis! Istirahat dulu sana.", "success");
+          recordActivity(AppState.activityLog);
+          this.playAlarm();
+
+          window.dispatchEvent(new CustomEvent("pomodoro-complete", {
+            detail: { message: "Waktu fokus selesai! Waktunya istirahat!" }
+          }));
         }
-      }, 1000);
+      }, 500); // Jalanin tiap 500ms biar pas nge-render detik di layar kerasa lebih smooth
     }
   },
 
-  reset() {
+  // Helper biar nggak ngulang nulis kode reset UI buat tombol
+  resetTimerState() {
     if (pomoInterval) {
       clearInterval(pomoInterval);
       pomoInterval = null;
     }
     isRunning = false;
-    pomoTime = POMODORO_DURATION;
-    lastTimestamp = null;
-    this.updateDisplay();
-    this.stopAlarm();
+    endTime = null;
 
     const btn = document.getElementById("pomodoroStart");
     if (btn) {
@@ -136,6 +112,13 @@ export const Pomodoro = {
       btn.classList.remove("bg-yellow-500");
       btn.classList.add("bg-primary");
     }
+  },
+
+  reset() {
+    this.resetTimerState();
+    pomoTime = POMODORO_DURATION;
+    this.updateDisplay();
+    this.stopAlarm();
   },
 
   playAlarm() {
