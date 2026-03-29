@@ -11,6 +11,13 @@ import { NotificationManager } from "./modules/notifications";
 import { AppState } from "./modules/state";
 import { saveToLocalStorage } from "./utils/storage";
 import { initToast, showToast, showTaskCompleteToast, showDeadlineToast } from "./utils/toast";
+import { RoutineManager } from "./modules/routines";
+
+
+
+// Panggil load saat user login
+// Di UI.renderAuthState, tambahin:
+
 
 // Expose globally for HTML onclick handlers
 window.app = { switchTab: (tab) => UI.switchTab(tab) };
@@ -24,6 +31,18 @@ window.pomodoro = Pomodoro;
 window.NotificationManager = NotificationManager;
 window.showToast = showToast;
 window.showTaskCompleteToast = showTaskCompleteToast;
+window.routineManager = RoutineManager;
+window.Dashboard = Dashboard;
+
+window.addEventListener("routines-updated", () => {
+  console.log("🔄 Routines updated event received, refreshing dashboard...");
+  if (window.Dashboard) {
+    window.Dashboard.update();
+    if (typeof window.Dashboard.updateRoutineWidget === 'function') {
+      window.Dashboard.updateRoutineWidget();
+    }
+  }
+});
 
 // Reminder modal functions
 window.showReminderModal = async (taskId, taskTitle) => {
@@ -83,6 +102,68 @@ window.addEventListener("pomodoro-complete", (e) => {
   }
 });
 
+// Fungsi global untuk email auth
+window.handleEmailLogin = async () => {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+  if (!email || !password) {
+    showToast("Isi email dan password!", "error");
+    return;
+  }
+  await AuthManager.loginWithEmail(email, password);
+};
+
+window.handleEmailRegister = async () => {
+  const email = document.getElementById("registerEmail").value;
+  const password = document.getElementById("registerPassword").value;
+  if (!email || !password) {
+    showToast("Isi email dan password!", "error");
+    return;
+  }
+  if (password.length < 6) {
+    showToast("Password minimal 6 karakter!", "error");
+    return;
+  }
+  await AuthManager.registerWithEmail(email, password);
+};
+
+window.showResetPassword = () => {
+  document.getElementById("resetModal").classList.remove("hidden");
+  document.getElementById("resetModal").classList.add("flex");
+};
+
+window.closeResetModal = () => {
+  document.getElementById("resetModal").classList.add("hidden");
+  document.getElementById("resetModal").classList.remove("flex");
+};
+
+window.handleResetPassword = async () => {
+  const email = document.getElementById("resetEmail").value;
+  if (!email) {
+    showToast("Isi email!", "error");
+    return;
+  }
+  await AuthManager.resetPassword(email);
+  closeResetModal();
+};
+
+// Tab切换
+document.getElementById("tabLogin")?.addEventListener("click", () => {
+  document.getElementById("loginForm").classList.remove("hidden");
+  document.getElementById("registerForm").classList.add("hidden");
+  document.getElementById("tabLogin").classList.add("border-b-2", "border-primary", "text-primary");
+  document.getElementById("tabRegister").classList.remove("border-b-2", "border-primary", "text-primary");
+  document.getElementById("tabRegister").classList.add("text-gray-500");
+});
+
+document.getElementById("tabRegister")?.addEventListener("click", () => {
+  document.getElementById("registerForm").classList.remove("hidden");
+  document.getElementById("loginForm").classList.add("hidden");
+  document.getElementById("tabRegister").classList.add("border-b-2", "border-primary", "text-primary");
+  document.getElementById("tabLogin").classList.remove("border-b-2", "border-primary", "text-primary");
+  document.getElementById("tabLogin").classList.add("text-gray-500");
+});
+
 // DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
   initToast();
@@ -90,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Pomodoro.init();
   MusicPlayer.init();
   NotificationManager.init();
+  RoutineManager.initModalListener();
 
   // 🔥 TAMBAHKAN INI - Request notification permission after user interaction
   const requestNotificationAfterInteraction = async () => {

@@ -1,9 +1,70 @@
 import { AppState } from "./state";
 import { Dashboard } from "./dashboard";
-import { DEFAULT_WORDS } from "../utils/constants";
+import { DEFAULT_WORDS, getWordOfDay } from "../utils/constants";
 import { TaskManager } from "./tasks";
 import { NoteManager } from "./notes";
 import { ChatManager } from "./chat";
+
+import { fetchWeatherAuto } from './weather.js';
+
+export const renderCurrentDate = () => {
+  const dateElement = document.getElementById("dateDisplay");
+  if (!dateElement) return;
+
+  const today = new Date();
+  
+  // Pake Intl.DateTimeFormat biar dapet format lokal yang enak dibaca
+  // Contoh output: "Senin, 29 Maret 2026"
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  dateElement.innerText = today.toLocaleDateString('id-ID', options);
+};
+
+// src/modules/ui.js
+
+export const updateDashboardInfo = async () => {
+  const weatherEl = document.getElementById("weatherDisplay");
+  const dateEl = document.getElementById("dateDisplay");
+  if (!weatherEl) return;
+
+  // Render Tanggal tetep jalan
+  const now = new Date();
+  if (dateEl) {
+    dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // Minta lokasi tanpa fallback
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        // KONDISI SUKSES: Render cuaca asli
+        const data = await fetchWeatherAuto(pos.coords.latitude, pos.coords.longitude);
+        if (data) {
+          weatherEl.innerHTML = `
+            <div class="flex items-center gap-3 bg-white/5 backdrop-blur-sm p-2 px-4 rounded-2xl border border-white/10 shadow-sm animate-fade-in">
+              <i class="fa-solid ${data.iconClass} text-2xl"></i>
+              <div class="text-left">
+                <p class="text-xl font-bold leading-none">${data.temp}°C</p>
+                <p class="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">${data.area} - ${data.desc}</p>
+              </div>
+            </div>
+          `;
+        }
+      },
+      (err) => {
+        // KONDISI ERROR/DITOLAK: Tampilkan pesan error, jangan fallback ke Jakarta
+        console.warn("Geolocation Error:", err.message);
+        weatherEl.innerHTML = `
+          <div class="text-[10px] text-red-400 font-bold uppercase italic bg-red-400/10 p-2 rounded-xl border border-red-400/20">
+            <i class="fa-solid fa-location-dot mr-1"></i> Izin Lokasi Diperlukan
+          </div>
+        `;
+      },
+      { timeout: 10000 } // Kasih timeout 10 detik biar gak nunggu kelamaan
+    );
+  } else {
+    weatherEl.innerHTML = `<span class="text-xs text-gray-400 italic">Browser tidak support lokasi</span>`;
+  }
+};
 
 export const UI = {
   sidebar: null,
@@ -97,42 +158,92 @@ export const UI = {
     const mainDashboard = document.getElementById("mainDashboard");
 
     if (user) {
-      // Update Word of the Day
-      const randomWord = DEFAULT_WORDS[Math.floor(Math.random() * DEFAULT_WORDS.length)];
-      const jpKanji = document.getElementById("jpKanji");
-      const jpRomaji = document.getElementById("jpRomaji");
-      if (jpKanji) jpKanji.innerText = randomWord.kanji;
-      if (jpRomaji) jpRomaji.innerText = randomWord.romaji;
+      // Update Word of the Day dengan safe check
+      try {
+        const word = getWordOfDay(); // 🔥 Pakai fungsi getWordOfDay
+        const jpKanji = document.getElementById("jpKanji");
+        const jpRomaji = document.getElementById("jpRomaji");
+        if (jpKanji) jpKanji.innerText = word.kanji;
+        if (jpRomaji) jpRomaji.innerText = `(${word.romaji}) - ${word.meaning}`;
+      } catch (error) {
+        console.error("Error updating word of day:", error);
+        // Fallback
+        const jpKanji = document.getElementById("jpKanji");
+        const jpRomaji = document.getElementById("jpRomaji");
+        if (jpKanji) jpKanji.innerText = "勉強";
+        if (jpRomaji) jpRomaji.innerText = "(Benkyou) - Belajar";
+      }
 
+      // 🔥 LOGIC FOTO & NAMA BARU DI SINI 🔥
       const welcomeText = document.getElementById("welcomeText");
-      if (welcomeText) welcomeText.innerText = `Welcome Back, ${user.displayName}!`;
+      if (welcomeText) {
+        // Ambil nama dari displayName (kalo login Google). Kalo email, potong nama depan sblm '@'
+        const displayName = user.displayName || (user.email ? user.email.split('@')[0] : "User");
+        welcomeText.innerText = `Welcome Back, ${displayName}!`;
+      }
 
       const userProfileImg = document.getElementById("userProfileImg");
       if (userProfileImg) {
-        userProfileImg.onerror = () => userProfileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=6366F1&color=fff`;
-        userProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=6366F1&color=fff`;
+        if (user.photoURL) {
+          // KONDISI 1: Google Login -> Gak diapa-apain, tetep pake foto asli
+          userProfileImg.src = user.photoURL;
+          
+          // Jaga-jaga kalo link foto dari Google lagi error
+          userProfileImg.onerror = () => {
+            const fbName = user.displayName || "User";
+            userProfileImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fbName)}&background=6366F1&color=fff&bold=true`;
+          };
+        } else {
+          // KONDISI 2: Email Login -> Ambil 2 huruf depan email
+          const emailStr = user.email || "User";
+          const initials = emailStr.substring(0, 2).toUpperCase(); // misal "ab@..." jadi "AB"
+          
+          userProfileImg.src = `https://ui-avatars.com/api/?name=${initials}&background=6366F1&color=fff&bold=true`;
+          userProfileImg.onerror = null; // Biar ga nge-loop errornya
+        }
       }
 
       loginScreen?.classList.add("hidden");
       mainDashboard?.classList.remove("hidden");
       mainDashboard?.classList.add("flex");
 
-      setTimeout(() => {
-        TaskManager.load();
-        NoteManager.load();
-        ChatManager.load();
+      setTimeout(async () => {
+        await TaskManager.load();
+        await NoteManager.load();
+        await ChatManager.load();
+
+        if (window.routineManager) {
+          console.log("📋 Loading routines...");
+          await window.routineManager.load();
+        }
+
         Dashboard.update();
+        updateDashboardInfo();
       }, 100);
     } else {
       loginScreen?.classList.remove("hidden");
       mainDashboard?.classList.add("hidden");
       mainDashboard?.classList.remove("flex");
+      
       AppState.tasks = [];
       AppState.notes = [];
+      AppState.routines = [];
+      
       const taskList = document.getElementById("taskList");
       if (taskList) taskList.innerHTML = "";
+      
       const chatBox = document.getElementById("chatBox");
       if (chatBox) chatBox.innerHTML = "";
+      
+      const routinesContainer = document.getElementById("routinesContainer");
+      if (routinesContainer) routinesContainer.innerHTML = "";
+
+      // Balikin foto ke default pas udah log out
+      const userProfileImg = document.getElementById("userProfileImg");
+      if (userProfileImg) {
+        userProfileImg.src = `https://ui-avatars.com/api/?name=User&background=6366F1&color=fff`;
+        userProfileImg.onerror = null;
+      }
     }
-  }
+  } 
 };

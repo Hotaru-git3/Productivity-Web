@@ -435,3 +435,21 @@ button:active, .nav-btn:active {
 .task-priority-badge:hover {
   transform: scale(1.05);
 }
+
+/* Checkbox hari yang dicentang */
+.day-checkbox:checked + span {
+  background-color: #6366f1;
+  color: white;
+}
+
+/* Atau pakai parent styling */
+label:has(.day-checkbox:checked) {
+  background-color: #6366f1 !important;
+  color: white !important;
+  border-color: #6366f1 !important;
+}
+
+.filter-btn.active {
+  color: #6366f1 !important;
+  font-weight: 600 !important;
+}

@@ -1,379 +1,1081 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id" class="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Co-Dash | Productivity Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="/src/style.css" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
-<link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E">
-</head>
-<body>
-
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="fixed inset-0 bg-gray-50 dark:bg-darkBg z-50 flex items-center justify-center">
-    <div class="bg-white dark:bg-darkCard p-8 rounded-3xl shadow-xl max-w-sm w-full text-center mx-4 border border-gray-100 dark:border-gray-800 animate-fade-in">
-      <div class="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center mx-auto mb-6">
-        <i class="fa-solid fa-graduation-cap text-4xl text-primary"></i>
-      </div>
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Co-Dash</h1>
-      <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm">Masuk dulu, biar datanya aman!</p>
-      <button onclick="window.auth.login()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition shadow-sm">
-        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google" />
-        Lanjut pake Google
-      </button>
-    </div>
-  </div>
-
-  <!-- MAIN DASHBOARD -->
-  <div id="mainDashboard" class="hidden flex h-screen w-full bg-gray-50 dark:bg-darkBg text-gray-800 dark:text-gray-100">
-    <div id="overlay" class="fixed inset-0 bg-black/40 z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"></div>
-
-    <!-- SIDEBAR -->
-    <aside id="sidebar" class="w-64 bg-white dark:bg-darkCard shadow-lg flex flex-col border-r border-gray-200 dark:border-gray-800 fixed top-0 left-0 h-full z-50 transform transition-transform duration-300 -translate-x-full lg:translate-x-0">
-      <div class="p-6 flex justify-between items-center">
-        <h1 class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          <i class="fa-solid fa-graduation-cap mr-2"></i>Co-Dash
-        </h1>
-        <button id="closeSidebarBtn" class="lg:hidden text-gray-500 hover:text-primary">
-          <i class="fa-solid fa-times"></i>
-        </button>
-      </div>
-      <nav class="flex-1 px-4 space-y-2 mt-4">
-        <button onclick="window.app.switchTab('dashboard')" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left active-tab" data-tab="dashboard">
-          <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
-        </button>
-        <button onclick="window.app.switchTab('tasks')" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left" data-tab="tasks">
-          <i class="fa-solid fa-list-check w-6"></i> Tasks
-        </button>
-        <button onclick="window.app.switchTab('notes')" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left" data-tab="notes">
-          <i class="fa-solid fa-book w-6"></i> Notes
-        </button>
-        <button onclick="window.app.switchTab('chat')" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left" data-tab="chat">
-          <i class="fa-solid fa-robot w-6"></i> AI Assistant
-        </button>
-        <button onclick="window.app.switchTab('tools')" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left" data-tab="tools">
-          <i class="fa-solid fa-toolbox w-6"></i> Tools
-        </button>
-      </nav>
-      <div class="p-4 border-t border-gray-100 dark:border-gray-800">
-        <button onclick="window.auth.logout()" class="w-full flex items-center p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition">
-          <i class="fa-solid fa-right-from-bracket w-6"></i> Keluar
-        </button>
-      </div>
-      <div class="mt-auto p-4 border-t dark:border-gray-800">
-        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold">Connect with Me</p>
-        <div class="flex items-center gap-3">
-          <a href="https://linkedin.com/in/zidane-solahudin-573933345" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-600 hover:text-white transition">
-            <i class="fa-brands fa-linkedin-in"></i>
-          </a>
-          <a href="https://instagram.com/zdansln" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 hover:bg-pink-600 hover:text-white transition">
-            <i class="fa-brands fa-instagram"></i>
-          </a>
-          <a href="https://github.com/Hotaru-git3" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-900 hover:text-white transition">
-            <i class="fa-brands fa-github"></i>
-          </a>
-        </div>
-      </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-      <header class="h-16 flex items-center justify-between px-6 bg-white/80 dark:bg-darkCard/80 backdrop-blur-md shadow-sm z-10">
-        <div class="flex items-center gap-4">
-          <button id="openSidebarBtn" class="lg:hidden text-gray-500 hover:text-primary">
-            <i class="fa-solid fa-bars text-xl"></i>
-          </button>
-          <div class="relative hidden sm:block">
-            <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-            <input type="text" id="globalSearch" placeholder="Cari notes/tasks... (Tekan '/')" class="pl-9 pr-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64" />
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-            <i class="fa-solid fa-moon dark:hidden"></i>
-            <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
-          </button>
-          <img id="userProfileImg" class="w-8 h-8 rounded-full object-cover border" src="https://ui-avatars.com/api/?name=User" />
-        </div>
-      </header>
-
-      <div class="flex-1 overflow-y-auto p-6 scroll-smooth" id="content-area">
-        <!-- DASHBOARD TAB -->
-        <section id="dashboard" class="tab-content block animate-fade-in">
-          <h2 id="welcomeText" class="text-2xl font-bold mb-6">Welcome Back!</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <div class="flex justify-between items-center">
-                <div>
-                  <p class="text-sm text-gray-500">Tugas Nunggak</p>
-                  <h3 class="text-3xl font-bold text-red-500" id="stat-pending-tasks">0</h3>
-                </div>
-                <div class="p-4 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-xl">
-                  <i class="fa-solid fa-clock"></i>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <div class="flex justify-between items-center">
-                <div>
-                  <p class="text-sm text-gray-500">Total Notes</p>
-                  <h3 class="text-3xl font-bold text-primary" id="stat-total-notes">0</h3>
-                </div>
-                <div class="p-4 bg-indigo-100 dark:bg-indigo-900/30 text-primary rounded-xl">
-                  <i class="fa-solid fa-book"></i>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <div class="flex justify-between items-center">
-                <div>
-                  <p class="text-sm text-gray-500">Tugas Selesai</p>
-                  <h3 class="text-3xl font-bold text-green-500" id="stat-done-tasks">0</h3>
-                </div>
-                <div class="p-4 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-xl">
-                  <i class="fa-solid fa-check-double"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <h3 class="font-bold text-lg mb-4">Task Progress 📊</h3>
-              <div class="relative w-full max-w-[200px] mx-auto aspect-square">
-                <canvas id="taskChart"></canvas>
-              </div>
-            </div>
-            <div class="lg:col-span-2 bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-fire text-orange-500"></i> Up Next / Deadline Mepet
-              </h3>
-              <ul id="upNextList" class="space-y-3"></ul>
-            </div>
-          </div>
-          <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-              <i class="fa-brands fa-github text-primary"></i> Activity Heatmap (Last 30 Days)
-            </h3>
-            <div id="heatmapGrid" class="flex flex-wrap gap-1.5"></div>
-            <div class="text-xs text-gray-500 flex items-center gap-2 mt-3">
-              <span>Less</span>
-              <div class="w-3 h-3 bg-gray-200 dark:bg-gray-700 rounded-sm"></div>
-              <div class="w-3 h-3 bg-indigo-300 dark:bg-indigo-900/60 rounded-sm"></div>
-              <div class="w-3 h-3 bg-indigo-400 dark:bg-indigo-700 rounded-sm"></div>
-              <div class="w-3 h-3 bg-indigo-600 dark:bg-indigo-500 rounded-sm"></div>
-              <span>More</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- TASKS TAB -->
-        <section id="tasks" class="tab-content hidden animate-fade-in">
-          <h2 class="text-2xl font-bold mb-6">Task Tracker 📝</h2>
-          <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-            <form id="taskForm" class="flex flex-col md:flex-row gap-4 mb-6">
-  <input type="text" id="taskInput" placeholder="Tugas apa nih?" required class="flex-1 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
-  <input type="date" id="taskDeadline" required class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
-  
-  <!-- 🔥 TAMBAH DROPDOWN PRIORITY -->
-  <select id="taskPriority" class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-    <option value="high">🔴 High Priority</option>
-    <option value="medium" selected>🟡 Medium Priority</option>
-    <option value="low">🟢 Low Priority</option>
-  </select>
-  
-  <button type="submit" class="bg-primary hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition">
-    <i class="fa-solid fa-plus"></i> Add
-  </button>
-</form>
-            <div class="flex gap-4 mb-4 text-sm">
-              <button class="font-semibold text-primary" onclick="window.taskManager.setFilter('all')">Semua</button>
-              <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" onclick="window.taskManager.setFilter('pending')">Belum</button>
-              <button class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" onclick="window.taskManager.setFilter('done')">Selesai</button>
-            </div>
-            <ul id="taskList" class="space-y-3"></ul>
-          </div>
-        </section>
-
-        <!-- NOTES TAB -->
-        <section id="notes" class="tab-content hidden animate-fade-in">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Notes Kuliah 📚</h2>
-            <button onclick="window.noteManager.openModal()" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition shadow-sm">
-              <i class="fa-solid fa-plus"></i> Buat Note
-            </button>
-          </div>
-          <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-
-        <!-- CHAT TAB -->
-        <section id="chat" class="tab-content hidden h-full flex flex-col animate-fade-in">
-          <div class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-[calc(100vh-140px)]">
-            <div class="p-4 border-b dark:border-gray-800 flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white">
-                  <i class="fa-solid fa-robot"></i>
-                </div>
-                <div>
-                  <h2 class="font-bold">AI Assistant</h2>
-                  <span class="text-[10px] text-green-500 flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online
-                  </span>
-                </div>
-              </div>
-              <button onclick="window.chatManager.clearHistory()" class="text-gray-400 hover:text-red-500 p-2 rounded-lg transition" title="Bersihkan History Chat">
-                <i class="fa-solid fa-broom"></i>
-              </button>
-            </div>
-            <div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
-            <div class="p-3 border-t dark:border-gray-800 bg-gray-50 dark:bg-darkCard rounded-b-2xl">
-              <div id="imagePreviewContainer" class="hidden mb-2 relative inline-block">
-                <img id="imagePreview" class="h-10 rounded-md hidden" />
-                <button id="removeImageBtn" class="hidden absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs">✕</button>
-              </div>
-              <form id="chatForm" class="flex gap-2 items-center">
-                <input type="file" id="fileInput" accept="image/*,application/pdf,text/plain" class="hidden" />
-                <label for="fileInput" class="w-9 h-9 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center cursor-pointer shadow-sm border border-gray-200 dark:border-gray-700 hover:text-primary transition">
-                  <i class="fa-solid fa-paperclip text-gray-500 text-sm"></i>
-                </label>
-                <input type="text" id="chatInput" placeholder="Tanya AI..." class="flex-1 px-4 py-2 bg-white dark:bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-primary border border-gray-200 dark:border-gray-700 text-sm" required />
-                <button type="submit" class="bg-primary text-white w-9 h-9 rounded-full hover:bg-indigo-600 transition flex items-center justify-center">
-                  <i class="fa-solid fa-paper-plane text-sm"></i>
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
-
-        <!-- TOOLS TAB -->
-<section id="tools" class="tab-content hidden animate-fade-in">
-  <h2 class="text-2xl font-bold mb-6">Quick Tools 🛠️</h2>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>Co-Dash | Productivity Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-darkCard rounded-2xl shadow-2xl max-w-md w-full mx-auto border border-gray-100 dark:border-gray-800 animate-fade-in">
     
-    <!-- Pomodoro Timer Card -->
-    <div class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
-      <div class="text-center">
-        <h3 class="font-bold text-xl mb-1">🍅 Pomodoro Timer</h3>
-        <p class="text-gray-500 text-sm mb-5">Fokus 25 menit, istirahat 5 menit</p>
-        <div class="text-6xl font-bold mb-6 font-mono text-primary tracking-wider" id="pomodoroDisplay">25:00</div>
-        <div class="flex justify-center gap-3 mb-6">
-          <button id="pomodoroStart" class="bg-primary hover:bg-indigo-600 text-white px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2">
-            <i class="fa-solid fa-play text-sm"></i> Start
-          </button>
-          <button id="pomodoroReset" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2">
-            <i class="fa-solid fa-rotate-right text-sm"></i> Reset
-          </button>
-          <button id="stopAlarmBtn" class="hidden bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl transition font-medium flex items-center gap-2">
-            <i class="fa-solid fa-bell-slash text-sm"></i> Stop
-          </button>
+    <!-- Header -->
+    <div class="pt-8 px-8 text-center">
+      <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center mx-auto mb-3">
+        <i class="fa-solid fa-graduation-cap text-2xl text-primary"></i>
+      </div>
+      <h1 class="text-xl font-bold text-gray-800 dark:text-white">Co-Dash</h1>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Masuk atau daftar untuk melanjutkan</p>
+    </div>
+    
+    <!-- Tab Navigation -->
+    <div class="flex border-b border-gray-200 dark:border-gray-700 mt-5 mx-8">
+      <button id="tabLogin" class="flex-1 py-2 text-sm font-medium text-primary border-b-2 border-primary transition">Login</button>
+      <button id="tabRegister" class="flex-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition">Daftar</button>
+    </div>
+    
+    <!-- Form Container -->
+    <div class="p-8 pt-5">
+      <!-- Login Form -->
+      <div id="loginForm" class="space-y-3">
+        <input type="email" id="loginEmail" placeholder="Email" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <button onclick="handleEmailLogin()" class="w-full bg-primary text-white py-2.5 rounded-xl hover:bg-indigo-600 transition font-semibold text-sm">Login</button>
+        <div class="text-center">
+          <button onclick="showResetPassword()" class="text-xs text-primary hover:underline">Lupa password?</button>
         </div>
       </div>
       
-      <div class="border-t border-gray-200 dark:border-gray-700 pt-5 mt-1">
-        <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3 text-center">
-          <i class="fa-solid fa-music mr-1"></i> Study Music
-        </p>
-        <!-- Music Genre Buttons - Grid 2 kolom di mobile, flex di desktop -->
-<div class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2 mb-4">
-  <button onclick="window.music.play('lofi')" class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
-    <i class="fa-solid fa-headphones"></i> Lo-Fi
+      <!-- Register Form -->
+      <div id="registerForm" class="hidden space-y-3">
+        <input type="email" id="registerEmail" placeholder="Email" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <input type="password" id="registerPassword" placeholder="Password (min. 6 karakter)" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm">
+        <button onclick="handleEmailRegister()" class="w-full bg-primary text-white py-2.5 rounded-xl hover:bg-indigo-600 transition font-semibold text-sm">Daftar</button>
+      </div>
+      
+      <!-- Divider -->
+      <div class="relative my-5">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+        </div>
+        <div class="relative flex justify-center text-xs">
+          <span class="px-3 bg-white dark:bg-darkCard text-gray-400">atau</span>
+        </div>
+      </div>
+      
+      <!-- Google Button -->
+      <button onclick="window.auth.loginWithGoogle()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium py-2.5 rounded-xl flex items-center justify-center gap-3 transition text-sm">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4" alt="Google" />
+        Lanjut dengan Google
+      </button>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div id="resetModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[100]">
+  <div class="bg-white dark:bg-darkCard rounded-2xl p-6 max-w-sm w-full mx-4">
+    <h3 class="text-xl font-bold mb-4">Reset Password</h3>
+    <input type="email" id="resetEmail" placeholder="Email Anda" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary mb-3">
+    
+    <!-- 🔥 TAMBAHKAN PESAN INI -->
+    <p class="text-xs text-gray-500 mb-4 flex items-center gap-1">
+      <i class="fa-regular fa-envelope"></i>
+      Link reset akan dikirim ke email Anda. 
+      <span class="text-amber-500">Cek folder Spam/Junk jika tidak muncul!</span>
+    </p>
+    
+    <div class="flex gap-3">
+      <button onclick="closeResetModal()" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 transition">Batal</button>
+      <button onclick="handleResetPassword()" class="flex-1 px-4 py-2 bg-primary text-white rounded-xl hover:bg-indigo-600 transition">Kirim</button>
+    </div>
+  </div>
+</div>
+
+    <!-- MAIN DASHBOARD -->
+    <div
+      id="mainDashboard"
+      class="hidden flex h-screen w-full bg-gray-50 dark:bg-darkBg text-gray-800 dark:text-gray-100"
+    >
+      <div
+        id="overlay"
+        class="fixed inset-0 bg-black/40 z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"
+      ></div>
+
+      <!-- SIDEBAR -->
+      <aside
+        id="sidebar"
+        class="w-64 bg-white dark:bg-darkCard shadow-lg flex flex-col border-r border-gray-200 dark:border-gray-800 fixed top-0 left-0 h-full z-50 transform transition-transform duration-300 -translate-x-full lg:translate-x-0"
+      >
+        <div class="p-6 flex justify-between items-center">
+          <h1
+            class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+          >
+            <i class="fa-solid fa-graduation-cap mr-2"></i>Co-Dash
+          </h1>
+          <button
+            id="closeSidebarBtn"
+            class="lg:hidden text-gray-500 hover:text-primary"
+          >
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+        <nav class="flex-1 px-4 space-y-2 mt-4">
+          <button
+            onclick="window.app.switchTab('dashboard')"
+            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left active-tab"
+            data-tab="dashboard"
+          >
+            <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
+          </button>
+          <button
+            onclick="window.app.switchTab('routines')"
+            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+            data-tab="routines"
+          >
+            <i class="fa-solid fa-calendar-check w-6"></i> Daily Routine
+          </button>
+          <button
+            onclick="window.app.switchTab('tasks')"
+            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+            data-tab="tasks"
+          >
+            <i class="fa-solid fa-list-check w-6"></i> Tasks
+          </button>
+          <button
+            onclick="window.app.switchTab('notes')"
+            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+            data-tab="notes"
+          >
+            <i class="fa-solid fa-book w-6"></i> Notes
+          </button>
+          <button
+            onclick="window.app.switchTab('chat')"
+            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+            data-tab="chat"
+          >
+            <i class="fa-solid fa-robot w-6"></i> AI Assistant
+          </button>
+          <button
+            onclick="window.app.switchTab('tools')"
+            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+            data-tab="tools"
+          >
+            <i class="fa-solid fa-toolbox w-6"></i> Tools
+          </button>
+        </nav>
+        <div class="p-4 border-t border-gray-100 dark:border-gray-800">
+          <button
+            onclick="window.auth.logout()"
+            class="w-full flex items-center p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"
+          >
+            <i class="fa-solid fa-right-from-bracket w-6"></i> Keluar
+          </button>
+        </div>
+        <div class="mt-auto p-4 border-t dark:border-gray-800">
+          <p
+            class="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold"
+          >
+            Connect with Me
+          </p>
+          <div class="flex items-center gap-3">
+            <a
+              href="https://linkedin.com/in/zidane-solahudin-573933345"
+              target="_blank"
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-600 hover:text-white transition"
+            >
+              <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a
+              href="https://instagram.com/zdansln"
+              target="_blank"
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 hover:bg-pink-600 hover:text-white transition"
+            >
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a
+              href="https://github.com/Hotaru-git3"
+              target="_blank"
+              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-900 hover:text-white transition"
+            >
+              <i class="fa-brands fa-github"></i>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header
+          class="h-16 flex items-center justify-between px-6 bg-white/80 dark:bg-darkCard/80 backdrop-blur-md shadow-sm z-10"
+        >
+          <div class="flex items-center gap-4">
+            <button
+              id="openSidebarBtn"
+              class="lg:hidden text-gray-500 hover:text-primary"
+            >
+              <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="relative hidden sm:block">
+              <i
+                class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+              ></i>
+              <input
+                type="text"
+                id="globalSearch"
+                placeholder="Cari notes... (Tekan '/')"
+                class="pl-9 pr-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64"
+              />
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <button
+              id="themeToggle"
+              class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            >
+              <i class="fa-solid fa-moon dark:hidden"></i>
+              <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
+            </button>
+            <img
+  id="userProfileImg"
+  class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+  src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+/>
+          </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 scroll-smooth" id="content-area">
+          <!-- DASHBOARD TAB -->
+          <section id="dashboard" class="tab-content block animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-6">
+  <div>
+    <p id="dateDisplay" class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Memuat tanggal...</p>
+    <h2 id="welcomeText" class="text-2xl font-bold">
+      Welcome Back!
+    </h2>
+  </div>
+  <div id="weatherDisplay" class="text-right">
+    <span class="animate-pulse text-xs text-gray-400">Memeriksa cuaca...</span>
+  </div>
+</div>
+            
+            <div id="routineWidget" class="mb-8"></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div
+                class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+              >
+                <div class="flex justify-between items-center">
+                  <div>
+                    <p class="text-sm text-gray-500">Tugas Nunggak</p>
+                    <h3
+                      class="text-3xl font-bold text-red-500"
+                      id="stat-pending-tasks"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="p-4 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-xl"
+                  >
+                    <i class="fa-solid fa-clock"></i>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+              >
+                <div class="flex justify-between items-center">
+                  <div>
+                    <p class="text-sm text-gray-500">Total Notes</p>
+                    <h3
+                      class="text-3xl font-bold text-primary"
+                      id="stat-total-notes"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="p-4 bg-indigo-100 dark:bg-indigo-900/30 text-primary rounded-xl"
+                  >
+                    <i class="fa-solid fa-book"></i>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+              >
+                <div class="flex justify-between items-center">
+                  <div>
+                    <p class="text-sm text-gray-500">Tugas Selesai</p>
+                    <h3
+                      class="text-3xl font-bold text-green-500"
+                      id="stat-done-tasks"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="p-4 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-xl"
+                  >
+                    <i class="fa-solid fa-check-double"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              <div
+                class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+              >
+                <h3 class="font-bold text-lg mb-4">Task Progress 📊</h3>
+                <div
+                  class="relative w-full max-w-[200px] mx-auto aspect-square"
+                >
+                  <canvas id="taskChart"></canvas>
+                </div>
+              </div>
+              <div
+                class="lg:col-span-2 bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+              >
+                <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                  <i class="fa-solid fa-fire text-orange-500"></i> Up Next /
+                  Deadline Mepet
+                </h3>
+                <ul id="upNextList" class="space-y-3"></ul>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"
+            >
+              <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <i class="fa-brands fa-github text-primary"></i> Activity
+                Heatmap (Last 30 Days)
+              </h3>
+              <div id="heatmapGrid" class="flex flex-wrap gap-1.5"></div>
+              <div class="text-xs text-gray-500 flex items-center gap-2 mt-3">
+                <span>Less</span>
+                <div
+                  class="w-3 h-3 bg-gray-200 dark:bg-gray-700 rounded-sm"
+                ></div>
+                <div
+                  class="w-3 h-3 bg-indigo-300 dark:bg-indigo-900/60 rounded-sm"
+                ></div>
+                <div
+                  class="w-3 h-3 bg-indigo-400 dark:bg-indigo-700 rounded-sm"
+                ></div>
+                <div
+                  class="w-3 h-3 bg-indigo-600 dark:bg-indigo-500 rounded-sm"
+                ></div>
+                <span>More</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ROUTINES TAB -->
+          <section id="routines" class="tab-content hidden animate-fade-in">
+            <div
+              class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6"
+            >
+              <h2 class="text-2xl font-bold">Daily Routine 📋</h2>
+              <button
+                onclick="window.routineManager.openAddModal()"
+                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition flex items-center justify-center gap-2 w-full sm:w-auto"
+              >
+                <i class="fa-solid fa-plus"></i> Tambah Rutinitas
+              </button>
+            </div>
+            <div id="routinesContainer"></div>
+          </section>
+
+          <!-- TASKS TAB -->
+          <section id="tasks" class="tab-content hidden animate-fade-in">
+            <h2 class="text-2xl font-bold mb-6">Task Tracker 📝</h2>
+            <div
+              class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800"
+            >
+              <form id="taskForm" class="flex flex-col md:flex-row gap-4 mb-6">
+                <input
+                  type="text"
+                  id="taskInput"
+                  placeholder="Tugas apa nih?"
+                  required
+                  class="flex-1 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input
+                  type="date"
+                  id="taskDeadline"
+                  required
+                  class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <select
+                  id="taskPriority"
+                  class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="high">🔴 High Priority</option>
+                  <option value="medium" selected>🟡 Medium Priority</option>
+                  <option value="low">🟢 Low Priority</option>
+                </select>
+                <button
+                  type="submit"
+                  class="bg-primary hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition"
+                >
+                  <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </form>
+              <div class="flex gap-4 mb-4 text-sm">
+  <button
+    id="filterAll"
+    class="text-primary font-semibold"
+    onclick="window.taskManager.setFilter('all')"
+  >
+    Semua
   </button>
-  <button onclick="window.music.play('classical')" class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
-    <i class="fa-solid fa-music"></i> Classical
+  <button
+    id="filterPending"
+    class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+    onclick="window.taskManager.setFilter('pending')"
+  >
+    Belum
   </button>
-  <button onclick="window.music.play('ambient')" class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
-    <i class="fa-solid fa-cloud-moon"></i> Ambient
-  </button>
-  <button onclick="window.music.play('nature')" class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
-    <i class="fa-solid fa-tree"></i> Nature
+  <button
+    id="filterDone"
+    class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+    onclick="window.taskManager.setFilter('done')"
+  >
+    Selesai
   </button>
 </div>
-        
-        <div class="bg-gray-100 dark:bg-gray-800/50 rounded-xl p-3">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2 flex-1 min-w-0">
-              <div class="w-8 h-8 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center flex-shrink-0">
-                <i id="musicIcon" class="fa-solid fa-headphones text-primary text-sm"></i>
+              <ul id="taskList" class="space-y-3"></ul>
+            </div>
+          </section>
+
+          <!-- NOTES TAB -->
+          <section id="notes" class="tab-content hidden animate-fade-in">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold">Notes Kuliah 📚</h2>
+              <button
+                onclick="window.noteManager.openModal()"
+                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition shadow-sm"
+              >
+                <i class="fa-solid fa-plus"></i> Buat Note
+              </button>
+            </div>
+            <div
+              id="notesGrid"
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            ></div>
+          </section>
+
+          <!-- CHAT TAB -->
+          <section
+            id="chat"
+            class="tab-content hidden h-full flex flex-col animate-fade-in"
+          >
+            <div
+              class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-[calc(100vh-140px)]"
+            >
+              <div
+                class="p-4 border-b dark:border-gray-800 flex justify-between items-center"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white"
+                  >
+                    <i class="fa-solid fa-robot"></i>
+                  </div>
+                  <div>
+                    <h2 class="font-bold">AI Assistant</h2>
+                    <span
+                      class="text-[10px] text-green-500 flex items-center gap-1"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"
+                      ></span>
+                      Online
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onclick="window.chatManager.clearHistory()"
+                  class="text-gray-400 hover:text-red-500 p-2 rounded-lg transition"
+                  title="Bersihkan History Chat"
+                >
+                  <i class="fa-solid fa-broom"></i>
+                </button>
               </div>
-              <span id="currentMusicLabel" class="text-xs text-gray-600 dark:text-gray-400 truncate">Belum ada musik diputar</span>
+              <div
+                id="chatBox"
+                class="flex-1 overflow-y-auto p-4 space-y-4"
+              ></div>
+              <div
+                class="p-3 border-t dark:border-gray-800 bg-gray-50 dark:bg-darkCard rounded-b-2xl"
+              >
+                <div
+                  id="imagePreviewContainer"
+                  class="hidden mb-2 relative inline-block"
+                >
+                  <img id="imagePreview" class="h-10 rounded-md hidden" />
+                  <button
+                    id="removeImageBtn"
+                    class="hidden absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <form id="chatForm" class="flex gap-2 items-center">
+                  <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*,application/pdf,text/plain"
+                    class="hidden"
+                  />
+                  <label
+                    for="fileInput"
+                    class="w-9 h-9 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center cursor-pointer shadow-sm border border-gray-200 dark:border-gray-700 hover:text-primary transition"
+                  >
+                    <i class="fa-solid fa-paperclip text-gray-500 text-sm"></i>
+                  </label>
+                  <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Tanya AI..."
+                    class="flex-1 px-4 py-2 bg-white dark:bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-primary border border-gray-200 dark:border-gray-700 text-sm"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    class="bg-primary text-white w-9 h-9 rounded-full hover:bg-indigo-600 transition flex items-center justify-center"
+                  >
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                  </button>
+                </form>
+              </div>
             </div>
-            <div class="flex gap-1 flex-shrink-0">
-              <button id="musicPlayPauseBtn" onclick="window.music.togglePlayPause()" class="hidden w-8 h-8 rounded-full bg-primary text-white hover:bg-indigo-600 transition items-center justify-center">
-                <i class="fa-solid fa-play text-xs"></i>
+          </section>
+
+          <!-- TOOLS TAB -->
+          <section id="tools" class="tab-content hidden animate-fade-in">
+            <h2 class="text-2xl font-bold mb-6">Quick Tools 🛠️</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Pomodoro Timer Card -->
+              <div
+                class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6"
+              >
+                <div class="text-center">
+                  <h3 class="font-bold text-xl mb-1">🍅 Pomodoro Timer</h3>
+                  <p class="text-gray-500 text-sm mb-5">
+                    Fokus 25 menit, istirahat 5 menit
+                  </p>
+                  <div
+                    class="text-6xl font-bold mb-6 font-mono text-primary tracking-wider"
+                    id="pomodoroDisplay"
+                  >
+                    25:00
+                  </div>
+                  <div class="flex justify-center gap-3 mb-6">
+                    <button
+                      id="pomodoroStart"
+                      class="bg-primary hover:bg-indigo-600 text-white px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2"
+                    >
+                      <i class="fa-solid fa-play text-sm"></i> Start
+                    </button>
+                    <button
+                      id="pomodoroReset"
+                      class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2"
+                    >
+                      <i class="fa-solid fa-rotate-right text-sm"></i> Reset
+                    </button>
+                    <button
+                      id="stopAlarmBtn"
+                      class="hidden bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl transition font-medium flex items-center gap-2"
+                    >
+                      <i class="fa-solid fa-bell-slash text-sm"></i> Stop
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="border-t border-gray-200 dark:border-gray-700 pt-5 mt-1"
+                >
+                  <p
+                    class="text-xs font-bold text-primary uppercase tracking-widest mb-3 text-center"
+                  >
+                    <i class="fa-solid fa-music mr-1"></i> Study Music
+                  </p>
+                  <div
+                    class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2 mb-4"
+                  >
+                    <button
+                      onclick="window.music.play('lofi')"
+                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
+                    >
+                      <i class="fa-solid fa-headphones"></i> Lo-Fi
+                    </button>
+                    <button
+                      onclick="window.music.play('classical')"
+                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
+                    >
+                      <i class="fa-solid fa-music"></i> Classical
+                    </button>
+                    <button
+                      onclick="window.music.play('ambient')"
+                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
+                    >
+                      <i class="fa-solid fa-cloud-moon"></i> Ambient
+                    </button>
+                    <button
+                      onclick="window.music.play('nature')"
+                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
+                    >
+                      <i class="fa-solid fa-tree"></i> Nature
+                    </button>
+                  </div>
+                  <div class="bg-gray-100 dark:bg-gray-800/50 rounded-xl p-3">
+                    <div class="flex items-center justify-between gap-2">
+                      <div class="flex items-center gap-2 flex-1 min-w-0">
+                        <div
+                          class="w-8 h-8 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center flex-shrink-0"
+                        >
+                          <i
+                            id="musicIcon"
+                            class="fa-solid fa-headphones text-primary text-sm"
+                          ></i>
+                        </div>
+                        <span
+                          id="currentMusicLabel"
+                          class="text-xs text-gray-600 dark:text-gray-400 truncate"
+                          >Belum ada musik diputar</span
+                        >
+                      </div>
+                      <div class="flex gap-1 flex-shrink-0">
+                        <button
+                          id="musicPlayPauseBtn"
+                          onclick="window.music.togglePlayPause()"
+                          class="hidden w-8 h-8 rounded-full bg-primary text-white hover:bg-indigo-600 transition items-center justify-center"
+                        >
+                          <i class="fa-solid fa-play text-xs"></i>
+                        </button>
+                        <button
+                          id="musicStopBtn"
+                          onclick="window.music.stop()"
+                          class="hidden w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition items-center justify-center"
+                        >
+                          <i class="fa-solid fa-stop text-xs"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div id="volumeControl" class="hidden mt-2">
+                      <input
+                        type="range"
+                        id="volumeSlider"
+                        min="0"
+                        max="100"
+                        value="50"
+                        class="w-full h-1 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Word of the Day Card -->
+              <div
+                class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 text-center flex flex-col justify-center"
+              >
+                <div
+                  class="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md"
+                >
+                  <i class="fa-solid fa-language text-white text-xl"></i>
+                </div>
+                <p
+                  class="text-xs font-bold text-primary uppercase tracking-widest mb-2"
+                >
+                  📖 Word of the Day
+                </p>
+                <h3
+                  id="jpKanji"
+                  class="text-4xl font-bold mb-2 text-gray-800 dark:text-white"
+                >
+                  勉強
+                </h3>
+                <p
+                  id="jpRomaji"
+                  class="text-sm text-gray-500 dark:text-gray-400 mb-4"
+                >
+                  (Benkyou) - Belajar
+                </p>
+                <div
+                  class="h-px w-12 bg-primary mx-auto rounded-full mb-4"
+                ></div>
+                <p class="text-xs italic text-gray-400 mb-4">
+                  "Semangat nugasnya,"
+                </p>
+                <div
+                  class="mt-2 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-center gap-6"
+                >
+                  <div class="text-center">
+                    <p class="text-xl font-bold text-primary" id="streakCount">
+                      0
+                    </p>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Streak</p>
+                  </div>
+                  <div class="text-center">
+                    <p
+                      class="text-xl font-bold text-green-500"
+                      id="todayTasksDone"
+                    >
+                      0
+                    </p>
+                    <p class="text-[10px] text-gray-400 mt-0.5">
+                      Selesai Hari Ini
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- MODALS -->
+      <div
+        id="noteModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50"
+      >
+        <div class="bg-white dark:bg-darkCard w-full max-w-lg rounded-2xl p-6">
+          <h3 class="text-xl font-bold mb-4">Buat Catatan Baru</h3>
+          <form id="noteForm">
+            <input type="hidden" id="noteId" />
+            <input
+              type="text"
+              id="noteTitle"
+              placeholder="Judul Materi..."
+              class="w-full mb-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              required
+            />
+            <input
+              type="text"
+              id="noteTag"
+              placeholder="Tag (misal: Basis Data)"
+              class="w-full mb-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+            />
+            <textarea
+              id="noteContent"
+              rows="5"
+              placeholder="Isi catatan lo di sini..."
+              class="w-full mb-4 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              required
+            ></textarea>
+            <div class="flex justify-end gap-3">
+              <button
+                type="button"
+                onclick="window.noteManager.closeModal()"
+                class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+              >
+                Batal
               </button>
-              <button id="musicStopBtn" onclick="window.music.stop()" class="hidden w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition items-center justify-center">
-                <i class="fa-solid fa-stop text-xs"></i>
+              <button
+                type="submit"
+                class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition"
+              >
+                Simpan
               </button>
             </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ROUTINE MODAL (Baru dengan Hari, Jam Mulai-Selesai) -->
+      <div
+        id="routineModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[70]"
+      >
+        <div
+          class="bg-white dark:bg-darkCard w-full max-w-md rounded-2xl p-6 shadow-2xl"
+        >
+          <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-calendar-plus text-primary"></i> Tambah
+            Rutinitas
+          </h3>
+          <form id="routineForm">
+            <!-- Hari -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-2"
+                >Hari <span class="text-red-500">*</span></label
+              >
+              <div class="grid grid-cols-7 gap-2">
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="senin"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Sen</span>
+                </label>
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="selasa"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Sel</span>
+                </label>
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="rabu"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Rab</span>
+                </label>
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="kamis"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Kam</span>
+                </label>
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="jumat"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Jum</span>
+                </label>
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="sabtu"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Sab</span>
+                </label>
+                <label
+                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <input
+                    type="checkbox"
+                    name="day"
+                    value="minggu"
+                    class="day-checkbox hidden"
+                  />
+                  <span class="text-xs font-medium">Min</span>
+                </label>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-2">
+                Kosongkan jika rutin setiap hari
+              </p>
+            </div>
+
+            <!-- Icon -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Icon</label>
+              <div class="flex gap-2 flex-wrap mb-2">
+                <button
+                  type="button"
+                  data-icon="🏃"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  🏃
+                </button>
+                <button
+                  type="button"
+                  data-icon="📖"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  📖
+                </button>
+                <button
+                  type="button"
+                  data-icon="💧"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  💧
+                </button>
+                <button
+                  type="button"
+                  data-icon="🍽️"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  🍽️
+                </button>
+                <button
+                  type="button"
+                  data-icon="💤"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  💤
+                </button>
+                <button
+                  type="button"
+                  data-icon="📝"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  📝
+                </button>
+                <button
+                  type="button"
+                  data-icon="🧘"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  🧘
+                </button>
+                <button
+                  type="button"
+                  data-icon="📱"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  📱
+                </button>
+                <button
+                  type="button"
+                  data-icon="💪"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  💪
+                </button>
+                <button
+                  type="button"
+                  data-icon="🎯"
+                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
+                >
+                  🎯
+                </button>
+              </div>
+              <input
+                type="text"
+                id="routineIcon"
+                placeholder="Atau ketik icon manual (emoji)"
+                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                maxlength="2"
+              />
+            </div>
+
+            <!-- Nama Rutinitas -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1"
+                >Nama Rutinitas <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                id="routineTitle"
+                placeholder="Contoh: Olahraga pagi"
+                required
+                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <!-- Waktu Mulai - Selesai -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label class="block text-sm font-medium mb-1">Jam Mulai</label>
+                <input
+                  type="time"
+                  id="routineStartTime"
+                  value="07:00"
+                  class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1"
+                  >Jam Selesai</label
+                >
+                <input
+                  type="time"
+                  id="routineEndTime"
+                  value="08:00"
+                  class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+            </div>
+
+            <div class="flex gap-3 mt-6">
+              <button
+                type="button"
+                onclick="window.routineManager.closeModal()"
+                class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 transition"
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-indigo-600 transition"
+              >
+                Tambah
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div
+        id="confirmModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[60]"
+      >
+        <div
+          class="bg-white dark:bg-darkCard w-full max-w-xs rounded-2xl p-6 text-center"
+        >
+          <div
+            class="w-14 h-14 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"
+          >
+            <i class="fa-solid fa-trash-can"></i>
           </div>
-          <div id="volumeControl" class="hidden mt-2">
-            <input type="range" id="volumeSlider" min="0" max="100" value="50" class="w-full h-1 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer" />
+          <h3 class="text-xl font-bold mb-2">Yakin mau hapus?</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
+            Data yang udah dihapus nggak bisa balik lagi!
+          </p>
+          <div class="flex gap-3">
+            <button
+              onclick="window.confirmModal.close()"
+              class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition font-semibold"
+            >
+              Batal
+            </button>
+            <button
+              id="confirmDeleteBtn"
+              class="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition font-semibold"
+            >
+              Hapus!
+            </button>
           </div>
         </div>
       </div>
+
+      <div
+        id="toastContainer"
+        class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"
+      ></div>
     </div>
 
-    <!-- Word of the Day Card -->
-    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 text-center flex flex-col justify-center">
-      <div class="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
-        <i class="fa-solid fa-language text-white text-xl"></i>
-      </div>
-      <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">📖 Word of the Day</p>
-      <h3 id="jpKanji" class="text-4xl font-bold mb-2 text-gray-800 dark:text-white">勉強</h3>
-      <p id="jpRomaji" class="text-sm text-gray-500 dark:text-gray-400 mb-4">(Benkyou) - Belajar</p>
-      <div class="h-px w-12 bg-primary mx-auto rounded-full mb-4"></div>
-      <p class="text-xs italic text-gray-400 mb-4">"Semangat nugasnya,"</p>
-      <div class="mt-2 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-center gap-6">
-        <div class="text-center">
-          <p class="text-xl font-bold text-primary" id="streakCount">0</p>
-          <p class="text-[10px] text-gray-400 mt-0.5">Streak</p>
-        </div>
-        <div class="text-center">
-          <p class="text-xl font-bold text-green-500" id="todayTasksDone">0</p>
-          <p class="text-[10px] text-gray-400 mt-0.5">Selesai Hari Ini</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-      </div>
-    </main>
-
-    <!-- MODALS -->
-    <div id="noteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-      <div class="bg-white dark:bg-darkCard w-full max-w-lg rounded-2xl p-6">
-        <h3 class="text-xl font-bold mb-4">Buat Catatan Baru</h3>
-        <form id="noteForm">
-          <input type="hidden" id="noteId" />
-          <input type="text" id="noteTitle" placeholder="Judul Materi..." class="w-full mb-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required />
-          <input type="text" id="noteTag" placeholder="Tag (misal: Basis Data)" class="w-full mb-3 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" />
-          <textarea id="noteContent" rows="5" placeholder="Isi catatan lo di sini..." class="w-full mb-4 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none" required></textarea>
-          <div class="flex justify-end gap-3">
-            <button type="button" onclick="window.noteManager.closeModal()" class="px-4 py-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition">Batal</button>
-            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition">Simpan</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div id="confirmModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[60]">
-      <div class="bg-white dark:bg-darkCard w-full max-w-xs rounded-2xl p-6 text-center">
-        <div class="w-14 h-14 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-          <i class="fa-solid fa-trash-can"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-2">Yakin mau hapus?</h3>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Data yang udah dihapus nggak bisa balik lagi!</p>
-        <div class="flex gap-3">
-          <button onclick="window.confirmModal.close()" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition font-semibold">Batal</button>
-          <button id="confirmDeleteBtn" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition font-semibold">Hapus!</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
-  </div>
-
-  <script type="module" src="/src/main.js"></script>
-</body>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

@@ -199,9 +199,34 @@ export const TaskManager = {
   },
 
   setFilter(filter) {
-    AppState.taskFilter = filter;
-    this.render();
-  },
+  AppState.taskFilter = filter;
+  this.render();
+  
+  // Update tombol aktif
+  const allBtn = document.getElementById('filterAll');
+  const pendingBtn = document.getElementById('filterPending');
+  const doneBtn = document.getElementById('filterDone');
+  
+  // Reset semua ke gray
+  [allBtn, pendingBtn, doneBtn].forEach(btn => {
+    if (btn) {
+      btn.classList.remove('text-primary', 'font-semibold');
+      btn.classList.add('text-gray-500');
+    }
+  });
+  
+  // Set aktif sesuai filter
+  if (filter === 'all' && allBtn) {
+    allBtn.classList.remove('text-gray-500');
+    allBtn.classList.add('text-primary', 'font-semibold');
+  } else if (filter === 'pending' && pendingBtn) {
+    pendingBtn.classList.remove('text-gray-500');
+    pendingBtn.classList.add('text-primary', 'font-semibold');
+  } else if (filter === 'done' && doneBtn) {
+    doneBtn.classList.remove('text-gray-500');
+    doneBtn.classList.add('text-primary', 'font-semibold');
+  }
+},
 
   render() {
     const list = document.getElementById("taskList");

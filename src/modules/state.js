@@ -2,6 +2,7 @@ import { loadFromLocalStorage } from "../utils/storage";
 
 export const AppState = {
   tasks: [],
+  routines: [],
   notes: [],
   activityLog: loadFromLocalStorage("activityLog", {}),
   taskFilter: "all",
@@ -18,6 +19,7 @@ export function updateState(key, value) {
 
 export function resetState() {
   AppState.tasks = [];
+  AppState.routines = [];
   AppState.notes = [];
   AppState.taskFilter = "all";
   AppState.pendingDelete = null;

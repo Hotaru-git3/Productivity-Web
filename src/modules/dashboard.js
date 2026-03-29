@@ -1,10 +1,12 @@
 import Chart from "chart.js/auto";
 import { AppState } from "./state";
+import { DEFAULT_WORDS } from "../utils/constants";
 
 let chartInstance = null;
 
 export const Dashboard = {
   update() {
+
     const pendingTasks = AppState.tasks.filter(t => !t.done);
     const doneTasks = AppState.tasks.filter(t => t.done);
 
@@ -20,6 +22,7 @@ export const Dashboard = {
     this.renderChart(pendingTasks.length, doneTasks.length);
     this.renderHeatmap();
     this.updateMiniStats();
+    this.updateRoutineWidget();
   },
 
   renderUpNext(pendingTasks) {
@@ -129,7 +132,80 @@ export const Dashboard = {
       else if (i > 0) break;
     }
     return streak;
+  },
+
+  // Di dashboard.js, updateRoutineWidget() tambah tombol refresh
+updateRoutineWidget() {
+  console.log("🎯 updateRoutineWidget dipanggil!"); // 🔥 TAMBAHKAN INI
+  
+  const container = document.getElementById("routineWidget");
+  if (!container) {
+    console.log("⚠️ routineWidget element not found!");
+    return;
   }
+  
+  console.log("✅ routineWidget ditemukan, updating..."); // 🔥 TAMBAHKAN INI
+  
+  const routines = AppState.routines || [];
+  console.log("📊 Jumlah routines:", routines.length); // 🔥 TAMBAHKAN INI
+
+  const today = new Date().toISOString().split("T")[0];
+  const todayName = ["minggu", "senin", "selasa", "rabu", "kamis", "jumat", "sabtu"][new Date().getDay()];
+
+  const todayRoutines = routines.filter(r => {
+    if (!r.days || r.days.length === 0) return true;
+    return r.days.includes(todayName);
+  });
+
+  const completedToday = todayRoutines.filter(r => r.history?.[today]).length;
+  const totalToday = todayRoutines.length;
+  const percent = totalToday > 0 ? Math.round((completedToday / totalToday) * 100) : 0;
+
+  if (totalToday === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+          <h3 class="font-bold text-lg">📋 Today's Routine</h3>
+          <div class="flex gap-2">
+            <button onclick="window.refreshRoutines()" class="text-gray-400 hover:text-primary transition p-1" title="Refresh">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+            <button onclick="window.app.switchTab('routines')" class="text-xs text-primary hover:underline">Setup →</button>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500 text-center py-4">
+          Belum ada rutinitas untuk hari ini.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+      <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+        <h3 class="font-bold text-lg">📋 Today's Routine</h3>
+        <div class="flex items-center gap-2">
+          <button onclick="window.refreshRoutines()" class="text-gray-400 hover:text-primary transition p-1" title="Refresh">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+          <span class="text-sm font-semibold text-primary">${completedToday}/${totalToday}</span>
+        </div>
+      </div>
+      <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div class="h-full bg-primary rounded-full transition-all" style="width: ${percent}%"></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-3">
+        ${percent === 100 ? "🎉 All done! Great job!" : `${totalToday - completedToday} more to go!`}
+      </p>
+      <button onclick="window.app.switchTab('routines')" 
+        class="mt-3 w-full text-center text-xs text-primary hover:underline">
+        Lihat semua rutinitas →
+      </button>
+    </div>
+  `;
+},
+
 };
 
 function escapeHtml(str) {
@@ -140,3 +216,4 @@ function escapeHtml(str) {
     return m;
   });
 }
+
