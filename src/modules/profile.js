@@ -4,10 +4,11 @@ import { AppState } from "./state";
 
 export const ProfileManager = {
   // Ganti bagian init() di profile.js lo dengan ini:
+// Ganti bagian init() di profile.js lo dengan ini:
 init() {
-  const menuBtn = document.getElementById("profileMenuBtn"); //
-  const dropdown = document.getElementById("profileDropdown"); //
-  const arrow = document.getElementById("dropdownArrow"); //
+  const menuBtn = document.getElementById("profileMenuBtn");
+  const dropdown = document.getElementById("profileDropdown");
+  const arrow = document.getElementById("dropdownArrow");
   let closeTimer;
 
   if (!menuBtn || !dropdown) return;
@@ -18,21 +19,46 @@ init() {
     if (arrow) arrow.style.transform = "rotate(180deg)";
   };
 
-  const hideDropdown = () => {
-    // Delay 300ms biar smooth pas pindah kursor
+  const hideDropdown = (immediate = false) => {
+    if (immediate) {
+      clearTimeout(closeTimer);
+      dropdown.classList.add("hidden");
+      if (arrow) arrow.style.transform = "rotate(0deg)";
+      return;
+    }
+    // Delay biar nggak langsung ilang pas kursor kegeser dikit
     closeTimer = setTimeout(() => {
       dropdown.classList.add("hidden");
       if (arrow) arrow.style.transform = "rotate(0deg)";
     }, 300);
   };
 
-  // Event saat hover tombol
-  menuBtn.addEventListener("mouseenter", showDropdown);
-  menuBtn.addEventListener("mouseleave", hideDropdown);
+  // --- LOGIC HYBRID ---
 
-  // Event saat kursor di dalem dropdown (biar nggak mati pas lagi milih menu)
+  // 1. Hover untuk Desktop
+  menuBtn.addEventListener("mouseenter", showDropdown);
+  menuBtn.addEventListener("mouseleave", () => hideDropdown(false));
   dropdown.addEventListener("mouseenter", () => clearTimeout(closeTimer));
-  dropdown.addEventListener("mouseleave", hideDropdown);
+  dropdown.addEventListener("mouseleave", () => hideDropdown(false));
+
+  // 2. Klik untuk Mobile & Toggle
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // Biar nggak langsung ketutup sama event document
+    const isHidden = dropdown.classList.contains("hidden");
+    
+    if (isHidden) {
+      showDropdown();
+    } else {
+      hideDropdown(true); // Langsung tutup kalo diklik pas lagi kebuka
+    }
+  });
+
+  // 3. Klik di luar area buat nutup (Penting buat mobile)
+  document.addEventListener("click", (e) => {
+    if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+      hideDropdown(true);
+    }
+  });
 
   this.updateUserInfo();
 },

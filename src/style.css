@@ -224,19 +224,57 @@ header {
   background: var(--color-primary);
 }
 
-/* Tambahin atau pastiin di style.css lo bagian ini */
+/* Update CSS lo biar transisinya lebih smooth */
 #profileDropdown {
-  /* Transisi opacity biar pas ilang nggak kasar */
-  transition: opacity 0.2s ease, transform 0.2s ease; 
-  pointer-events: auto;
+  display: block !important; /* Biar transisi opacity jalan, jangan pake display: none */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
 }
 
-/* Biar pas hidden bener-bener gak bisa diinteraksi */
 #profileDropdown.hidden {
   opacity: 0;
-  transform: scale(0.95) translateY(-8px);
-  pointer-events: none;
-  display: block !important; /* Kita pake opacity buat kontrol visibility biar transisi jalan */
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  pointer-events: none; /* Biar nggak bisa diklik pas lagi transparan */
+}
+
+/* Tambahin ini di style.css buat handle konten notes lo */
+#notesGrid {
+  /* Pastiin grid lo bener-bener turun ke bawah di layar kecil */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  gap: 1.5rem;
+}
+
+/* Di desktop, balik jadi 3 kolom atau sesuai grid lo sebelumnya */
+@media (min-width: 768px) {
+  #notesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  #notesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Biar teks di dalem card nggak jebol keluar (overflow) */
+.glass-card p, .glass-card h3 {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Perbaikan modal biar nggak mepet banget di HP */
+@media (max-width: 640px) {
+  #noteModal .bg-white {
+    width: 95%;
+    margin: 10px;
+    padding: 1.25rem;
+  }
 }
 
 /* ========== HEATMAP ========== */

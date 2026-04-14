@@ -337,7 +337,7 @@ export const Dashboard = {
     container.innerHTML = `
       <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
         <div class="flex justify-between items-center mb-3">
-          <h3 class="font-bold text-lg ">📋<span class="text-gradient">Today's Routine<span/></h3>
+          <h3 class="font-bold text-lg ">📋<span class="text-gradient pl-2">Today's Routine<span/></h3>
           <span class="text-sm font-semibold text-primary">${completedToday}/${totalToday}</span>
         </div>
         <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
