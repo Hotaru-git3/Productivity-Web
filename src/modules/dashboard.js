@@ -1,12 +1,10 @@
-import Chart from "chart.js/auto";
 import { AppState } from "./state";
-import { DEFAULT_WORDS } from "../utils/constants";
+import ApexCharts from 'apexcharts';
 
 let chartInstance = null;
 
 export const Dashboard = {
   update() {
-
     const pendingTasks = AppState.tasks.filter(t => !t.done);
     const doneTasks = AppState.tasks.filter(t => t.done);
 
@@ -56,28 +54,197 @@ export const Dashboard = {
   },
 
   renderChart(pending, done) {
-    const ctx = document.getElementById("taskChart");
-    if (!ctx) return;
+  const container = document.getElementById("taskChart");
+  if (!container) return;
 
-    const isDark = document.documentElement.classList.contains("dark");
-    const textColor = isDark ? "#9CA3AF" : "#4B5563";
-
-    if (chartInstance) chartInstance.destroy();
-
-    chartInstance = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["Selesai", "Nunggak"],
-        datasets: [{ data: [done, pending], backgroundColor: ["#10B981", "#EF4444"], borderWidth: 0, hoverOffset: 4 }]
+  const isDark = document.documentElement.classList.contains("dark");
+  
+  // Warna lebih soft
+  const colors = {
+    done: '#10B981',
+    pending: '#EF4444'
+  };
+  
+  const options = {
+    series: [done, pending],
+    labels: ['Selesai', 'Nunggak'],
+    colors: [colors.done, colors.pending],
+    chart: {
+      type: 'donut',
+      height: 280,
+      width: '100%',
+      background: 'transparent',
+      toolbar: { show: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 1200, // Lebih lambat = lebih smooth
+        animateGradually: { 
+          enabled: true, 
+          delay: 200 // Delay antar segment
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 800
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: "bottom", labels: { color: textColor, padding: 20 } } },
-        cutout: "70%"
+      dropShadow: {
+        enabled: true,
+        top: 2,
+        left: 0,
+        blur: 8,
+        color: '#000',
+        opacity: 0.1
       }
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '68%',
+          background: 'transparent',
+          labels: {
+            show: true,
+            name: { 
+              show: true, 
+              fontSize: '14px', 
+              fontFamily: 'Inter, sans-serif', 
+              color: isDark ? '#F9FAFB' : '#111827',
+              offsetY: -10
+            },
+            value: { 
+              show: true, 
+              fontSize: '24px', 
+              fontFamily: 'Inter, sans-serif', 
+              fontWeight: 'bold', 
+              color: isDark ? '#F9FAFB' : '#111827', 
+              offsetY: 10,
+              formatter: (val) => val 
+            },
+            total: { 
+              show: true, 
+              label: 'Total', 
+              fontSize: '12px', 
+              fontFamily: 'Inter, sans-serif',
+              color: isDark ? '#9CA3AF' : '#6B7280', 
+              formatter: (val) => done + pending,
+              offsetY: 25
+            }
+          }
+        },
+        pie: {
+          expandOnClick: true,
+          donut: {
+            background: 'transparent'
+          }
+        }
+      }
+    },
+    legend: {
+      position: 'bottom',
+      horizontalAlign: 'center',
+      fontSize: '13px',
+      fontFamily: 'Inter, sans-serif',
+      labels: { 
+        colors: isDark ? '#9CA3AF' : '#4B5563', 
+        useSeriesColors: false 
+      },
+      markers: { 
+        width: 10, 
+        height: 10, 
+        radius: 6,
+        hoverAnimation: true
+      },
+      itemMargin: { horizontal: 15, vertical: 8 },
+      onItemClick: { toggleDataSeries: true },
+      onItemHover: { highlightDataSeries: true }
+    },
+    tooltip: {
+      theme: isDark ? 'dark' : 'light',
+      y: { formatter: (val) => `${val} tugas` },
+      style: {
+        fontSize: '12px',
+        fontFamily: 'Inter, sans-serif'
+      }
+    },
+    stroke: { 
+      show: false,
+      width: 0
+    },
+    dataLabels: { 
+      enabled: false 
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'dark',
+        type: 'vertical',
+        shadeIntensity: 0.3,
+        gradientToColors: [colors.done, colors.pending],
+        inverseColors: false,
+        opacityFrom: 0.9,
+        opacityTo: 0.95,
+        stops: [0, 100]
+      }
+    },
+    states: {
+      hover: { 
+        filter: { 
+          type: 'darken', 
+          value: 0.08 
+        }
+      },
+      active: {
+        allowMultipleDataPointsSelection: false,
+        filter: { type: 'darken', value: 0.05 }
+      }
+    },
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        chart: { height: 240 },
+        legend: { position: 'bottom', fontSize: '11px' },
+        plotOptions: { pie: { donut: { labels: { value: { fontSize: '18px' } } } } }
+      }
+    }]
+  };
+
+  // Handle resize untuk responsive smooth
+  if (!this._resizeHandler) {
+    this._resizeHandler = () => {
+      if (chartInstance && window.innerWidth <= 768) {
+        chartInstance.updateOptions({
+          chart: { height: 240 },
+          plotOptions: { pie: { donut: { labels: { value: { fontSize: '18px' } } } } }
+        });
+      } else if (chartInstance && window.innerWidth > 768) {
+        chartInstance.updateOptions({
+          chart: { height: 280 },
+          plotOptions: { pie: { donut: { labels: { value: { fontSize: '24px' } } } } }
+        });
+      }
+    };
+    window.addEventListener('resize', () => {
+      clearTimeout(this._resizeTimer);
+      this._resizeTimer = setTimeout(this._resizeHandler, 150);
     });
-  },
+  }
+
+  if (chartInstance) {
+    // Update dengan animasi smooth
+    chartInstance.updateOptions(options, false, true, false);
+    chartInstance.updateSeries([done, pending], true);
+  } else {
+    chartInstance = new ApexCharts(container, options);
+    chartInstance.render().then(() => {
+      // Tambahin effect fade in selesai render
+      container.style.opacity = '0';
+      setTimeout(() => {
+        container.style.transition = 'opacity 0.5s ease';
+        container.style.opacity = '1';
+      }, 50);
+    });
+  }
+},
 
   renderHeatmap() {
     const grid = document.getElementById("heatmapGrid");
@@ -134,78 +301,58 @@ export const Dashboard = {
     return streak;
   },
 
-  // Di dashboard.js, updateRoutineWidget() tambah tombol refresh
-updateRoutineWidget() {
-  console.log("🎯 updateRoutineWidget dipanggil!"); // 🔥 TAMBAHKAN INI
-  
-  const container = document.getElementById("routineWidget");
-  if (!container) {
-    console.log("⚠️ routineWidget element not found!");
-    return;
-  }
-  
-  console.log("✅ routineWidget ditemukan, updating..."); // 🔥 TAMBAHKAN INI
-  
-  const routines = AppState.routines || [];
-  console.log("📊 Jumlah routines:", routines.length); // 🔥 TAMBAHKAN INI
+  updateRoutineWidget() {
+    const container = document.getElementById("routineWidget");
+    if (!container) return;
 
-  const today = new Date().toISOString().split("T")[0];
-  const todayName = ["minggu", "senin", "selasa", "rabu", "kamis", "jumat", "sabtu"][new Date().getDay()];
+    const routines = AppState.routines || [];
+    const today = new Date().toISOString().split("T")[0];
+    const todayName = ["minggu", "senin", "selasa", "rabu", "kamis", "jumat", "sabtu"][new Date().getDay()];
 
-  const todayRoutines = routines.filter(r => {
-    if (!r.days || r.days.length === 0) return true;
-    return r.days.includes(todayName);
-  });
+    const todayRoutines = routines.filter(r => {
+      if (!r.days || r.days.length === 0) return true;
+      return r.days.includes(todayName);
+    });
 
-  const completedToday = todayRoutines.filter(r => r.history?.[today]).length;
-  const totalToday = todayRoutines.length;
-  const percent = totalToday > 0 ? Math.round((completedToday / totalToday) * 100) : 0;
+    const completedToday = todayRoutines.filter(r => r.history?.[today]).length;
+    const totalToday = todayRoutines.length;
+    const percent = totalToday > 0 ? Math.round((completedToday / totalToday) * 100) : 0;
 
-  if (totalToday === 0) {
-    container.innerHTML = `
-      <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
-          <h3 class="font-bold text-lg">📋 Today's Routine</h3>
-          <div class="flex gap-2">
-            <button onclick="window.refreshRoutines()" class="text-gray-400 hover:text-primary transition p-1" title="Refresh">
-              <i class="fa-solid fa-rotate-right"></i>
-            </button>
+    if (totalToday === 0) {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 text-gradient">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold text-lg flex items-center gap-2">
+  <i class="fa-solid fa-calendar-check text-primary"></i> 
+  <span class="text-gradient">Today's Routine</span>
+</h3>
             <button onclick="window.app.switchTab('routines')" class="text-xs text-primary hover:underline">Setup →</button>
           </div>
+          <p class="text-sm text-gray-500 text-center py-4">Belum ada rutinitas untuk hari ini.</p>
         </div>
-        <p class="text-sm text-gray-500 text-center py-4">
-          Belum ada rutinitas untuk hari ini.
-        </p>
-      </div>
-    `;
-    return;
-  }
+      `;
+      return;
+    }
 
-  container.innerHTML = `
-    <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-      <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
-        <h3 class="font-bold text-lg">📋 Today's Routine</h3>
-        <div class="flex items-center gap-2">
-          <button onclick="window.refreshRoutines()" class="text-gray-400 hover:text-primary transition p-1" title="Refresh">
-            <i class="fa-solid fa-rotate-right"></i>
-          </button>
+    container.innerHTML = `
+      <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-bold text-lg ">📋<span class="text-gradient">Today's Routine<span/></h3>
           <span class="text-sm font-semibold text-primary">${completedToday}/${totalToday}</span>
         </div>
+        <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div class="h-full bg-primary rounded-full transition-all" style="width: ${percent}%"></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-3">
+          ${percent === 100 ? "🎉 All done! Great job!" : `${totalToday - completedToday} more to go!`}
+        </p>
+        <button onclick="window.app.switchTab('routines')" 
+          class="mt-3 w-full text-center text-xs text-primary hover:underline">
+          Lihat semua rutinitas →
+        </button>
       </div>
-      <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-        <div class="h-full bg-primary rounded-full transition-all" style="width: ${percent}%"></div>
-      </div>
-      <p class="text-xs text-gray-500 mt-3">
-        ${percent === 100 ? "🎉 All done! Great job!" : `${totalToday - completedToday} more to go!`}
-      </p>
-      <button onclick="window.app.switchTab('routines')" 
-        class="mt-3 w-full text-center text-xs text-primary hover:underline">
-        Lihat semua rutinitas →
-      </button>
-    </div>
-  `;
-},
-
+    `;
+  }
 };
 
 function escapeHtml(str) {
@@ -216,4 +363,3 @@ function escapeHtml(str) {
     return m;
   });
 }
-

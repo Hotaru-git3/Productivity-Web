@@ -9,17 +9,70 @@
   --color-darkCard: #1e1e1e;
 }
 
-#openSidebar {
-  display: block;
+/* ========== GLOBAL & RESET ========== */
+body {
+  font-family: 'Inter', sans-serif;
 }
 
-#overlay {
-  /* Transisi khusus buat fade in/out */
-  transition: opacity 0.4s ease, visibility 0.4s;
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/noise.png');
+  opacity: 0.03;
+  pointer-events: none;
 }
 
+/* ========== SIDEBAR STYLES ========== */
+#sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
+}
 
+.dark #sidebar {
+  background: linear-gradient(180deg, #1e1e2e 0%, #111827 100%);
+}
 
+#sidebar .nav-btn {
+  color: black !important;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark #sidebar .nav-btn {
+  color: white !important;
+}
+
+#sidebar .nav-btn:hover {
+  background: rgba(139, 92, 246, 0.15) !important;
+  transform: translateX(4px);
+}
+
+#sidebar .nav-btn.active-tab {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), transparent);
+  border-left: 3px solid #a78bfa;
+  color: #a78bfa !important;
+}
+
+#sidebar h1 {
+  background: linear-gradient(135deg, #a78bfa, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#sidebar .border-t {
+  border-top-color: rgba(139, 92, 246, 0.2) !important;
+}
+
+#sidebar .bg-blue-50,
+#sidebar .bg-pink-50,
+#sidebar .bg-gray-100 {
+  background: rgba(139, 92, 246, 0.15) !important;
+}
+
+/* ========== MAIN DASHBOARD ========== */
 #mainDashboard {
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -28,156 +81,75 @@
   opacity: 1;
 }
 
-#sidebar {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+/* ========== GLASS MORPHISM ========== */
+.bg-gradient-soft {
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #ffffff 100%);
 }
 
-/* 2. Setup Dark Mode berbasis class (Biar tombol toggle jalan) */
-@custom-variant dark (&:is(.dark *));
-
-/* 3. Custom CSS Scrollbar & Animasi */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #4b5563;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary);
+.dark .bg-gradient-soft {
+  background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #1e1b4b 100%);
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out forwards;
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dark .glass-card {
+  background: rgba(30, 30, 46, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Style Tab Aktif */
-.active-tab {
-  background-color: rgba(99, 102, 241, 0.1);
-  color: var(--color-primary);
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.dark .glass-card:hover {
+  background: rgba(40, 40, 60, 0.8);
+}
+
+/* Logo gradient ungu */
+.logo-gradient {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+header {
+  backdrop-filter: blur(16px);
+}
+
+/* ========== BUTTONS ========== */
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  transition: all 0.3s ease;
+  border: none;
+  color: white;
   font-weight: 600;
 }
 
-/* Style Tab Aktif pas Dark Mode */
-.dark .active-tab {
-  background-color: rgba(99, 102, 241, 0.2);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
 }
 
-/* Pastikan sidebar desktop selalu terlihat dan tombol hamburger hilang */
-@media (min-width: 1024px) {
-  #sidebar {
-    position: relative !important;
-    transform: translateX(0) !important;
-  }
-
-  #openSidebar,
-  #toggleSidebar {
-    display: none !important;
-  }
-}
-.dark .active-tab {
-  background-color: rgba(99, 102, 241, 0.2);
+.btn-primary:active {
+  transform: scale(0.96);
 }
 
-button:active {
-  transform: scale(0.95);
-  transition: transform 0.1s;
+.glow {
+  transition: box-shadow 0.3s ease;
 }
 
-.darkCard {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.glow:hover {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
 }
 
-.darkCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-}
-
-/* Mobile-friendly styles */
-@media (max-width: 640px) {
-  .line-clamp-4 {
-    -webkit-line-clamp: 3;
-  }
-
-  /* Touch targets lebih besar */
-  button,
-  [onclick] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Card notes lebih nyaman di-tap */
-  .notes-grid .group {
-    cursor: pointer;
-  }
-
-  /* Music player mobile */
-  #musicIframeContainer {
-    width: 280px !important;
-    height: 160px !important;
-    bottom: 10px !important;
-    right: 10px !important;
-  }
-}
-
-/* Active state untuk mobile */
-@media (hover: none) and (pointer: coarse) {
-  .active\:bg-gray-100:active {
-    background-color: #f3f4f6;
-  }
-  .dark .active\:bg-gray-700:active {
-    background-color: #374151;
-  }
-}
-
-#heatmapGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-#heatmapGrid div {
-  transition: all 0.2s ease;
-}
-
-#heatmapGrid div:hover {
-  transform: scale(1.1);
-}
-.line-clamp-4 {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Stagger animation for menu items */
+/* ========== NAVIGATION BUTTONS ========== */
 .nav-btn {
   transition: all 0.2s ease-in-out;
   position: relative;
@@ -195,14 +167,21 @@ button:active {
   transition: width 0.3s ease;
 }
 
+.text-gradient {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .nav-btn:hover::after {
   width: 100%;
 }
 
-/* Active tab indicator */
 .nav-btn.active-tab {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-  border-left: 3px solid #6366F1;
+  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15));
+  border-left: 3px solid #6366f1;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.15);
 }
 
 .dark .nav-btn.active-tab {
@@ -210,102 +189,72 @@ button:active {
   border-left-color: #818CF8;
 }
 
-/* Fade in animation for tab content */
-.tab-content {
-  animation: fadeIn 0.3s ease-out;
+/* ========== ACTIVE TAB (GLOBAL) ========== */
+.active-tab {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dark .active-tab {
+  background-color: rgba(99, 102, 241, 0.2);
 }
 
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
+/* ========== CARD ANIMATION ========== */
+.card-animate {
+  transition: all 0.25s ease;
 }
 
-/* Touch feedback for mobile */
-@media (hover: none) and (pointer: coarse) {
-  .nav-btn:active {
-    transform: scale(0.98);
-    background-color: rgba(99, 102, 241, 0.1);
-  }
-  
-  button:active {
-    transform: scale(0.97);
-  }
+.card-animate:hover {
+  transform: translateY(-4px) scale(1.01);
 }
 
-/* GLOBAL CLICKABLE POINTER 
-   Biar semua yang bisa diklik otomatis muncul ikon tangan
-*/
-
-/* 1. Elemen standar yang emang buat interaksi */
-button, 
-a, 
-label, 
-select,
-input[type="button"], 
-input[type="submit"], 
-input[type="checkbox"], 
-input[type="radio"] {
-  cursor: pointer !important;
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
-/* 2. Elemen custom yang lo kasih fungsi klik lewat JS (onclick) */
-[onclick], 
-.nav-btn, 
-.music-btn, 
-.active-tab,
-#overlay,
-#heatmapGrid div,
-#imagePreviewContainer button {
-  cursor: pointer !important;
+/* Tambahin atau pastiin di style.css lo bagian ini */
+#profileDropdown {
+  /* Transisi opacity biar pas ilang nggak kasar */
+  transition: opacity 0.2s ease, transform 0.2s ease; 
+  pointer-events: auto;
 }
 
-/* 3. Kasih feedback visual dikit biar makin smooth */
-button:hover, 
-.nav-btn:hover, 
-[onclick]:hover {
-  filter: brightness(1.1);
-  transition: filter 0.2s ease;
+/* Biar pas hidden bener-bener gak bisa diinteraksi */
+#profileDropdown.hidden {
+  opacity: 0;
+  transform: scale(0.95) translateY(-8px);
+  pointer-events: none;
+  display: block !important; /* Kita pake opacity buat kontrol visibility biar transisi jalan */
 }
 
-/* Khusus buat checkbox di Task Manager biar kerasa "ceklek"-nya */
-input[type="checkbox"] {
-  accent-color: var(--color-primary);
+/* ========== HEATMAP ========== */
+#heatmapGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-button:active, .nav-btn:active {
-  transform: scale(0.96);
-  transition: transform 0.1s ease;
+#heatmapGrid div {
+  transition: all 0.2s ease;
 }
 
-/* Task list item - thin border */
-#taskList li {
-  border-width: 1px;
-  border-color: rgba(0, 0, 0, 0.05);
+#heatmapGrid div:hover {
+  transform: scale(1.1);
 }
 
-.dark #taskList li {
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Task checkbox styling */
-#taskList input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  margin-right: 0.5rem;
-}
-
-/* Task list items - thin clean border */
+/* ========== TASK LIST ========== */
 #taskList li {
   border-width: 1px;
   border-style: solid;
@@ -322,12 +271,14 @@ button:active, .nav-btn:active {
   background-color: rgba(99, 102, 241, 0.02);
 }
 
-.dark #taskList li:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  background-color: rgba(99, 102, 241, 0.05);
+#taskList input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  accent-color: var(--color-primary);
 }
 
-/* Toast container - lebih terlihat di HP */
+/* ========== TOAST ========== */
 #toastContainer {
   z-index: 9999;
 }
@@ -336,9 +287,9 @@ button:active, .nav-btn:active {
   max-width: 90vw;
   word-break: break-word;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
 }
 
-/* Untuk HP, toast lebih besar dan di tengah bawah */
 @media (max-width: 640px) {
   #toastContainer {
     bottom: 20px;
@@ -346,7 +297,6 @@ button:active, .nav-btn:active {
     transform: translateX(50%);
     left: auto;
   }
-  
   #toastContainer > div {
     min-width: 280px;
     max-width: 90vw;
@@ -356,100 +306,249 @@ button:active, .nav-btn:active {
   }
 }
 
-/* Toast Animations */
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+/* ========== PROFILE DROPDOWN ========== */
+#profileDropdown {
+  transform-origin: top right;
+  animation: dropdownFade 0.15s ease-out;
+  z-index: 9999 !important;
 }
 
-@keyframes bounceIn {
-  0% {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+#profileDropdown.hidden {
+  display: none !important;
 }
 
-.animate-slide-in-right {
-  animation: slideInRight 0.3s ease forwards;
-}
-
-.animate-bounce-in {
-  animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-}
-
-/* Toast Container */
-#toastContainer {
-  z-index: 9999;
-}
-
-#toastContainer > div {
-  backdrop-filter: blur(4px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-}
-
-/* Mobile toast */
-@media (max-width: 640px) {
-  #toastContainer {
-    bottom: 20px;
-    right: 50%;
-    transform: translateX(50%);
-    left: auto;
-    width: auto;
-    max-width: 90vw;
-  }
-  
-  #toastContainer > div {
-    min-width: 280px;
-    max-width: 90vw;
-    white-space: normal;
-    word-break: break-word;
-  }
-}
-
-/* Priority dropdown hover */
-.group:hover .group-hover\:block {
+#profileDropdown:not(.hidden) {
   display: block !important;
 }
 
-/* Priority badge styling */
-.task-priority-badge {
-  transition: all 0.2s ease;
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-.task-priority-badge:hover {
-  transform: scale(1.05);
+#dropdownArrow {
+  transition: transform 0.2s ease;
 }
 
-/* Checkbox hari yang dicentang */
+/* Dropdown menu items slider effect */
+#profileDropdown button {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+#profileDropdown button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6366F1, #8B5CF6);
+  transition: width 0.3s ease;
+}
+
+#profileDropdown button:hover::after {
+  width: 100%;
+}
+
+#profileDropdown button:hover {
+  background-color: rgba(99, 102, 241, 0.08);
+}
+
+.dark #profileDropdown button:hover {
+  background-color: rgba(99, 102, 241, 0.15);
+}
+
+#profileDropdown button:hover i {
+  transform: translateX(4px);
+  color: #6366f1 !important;
+}
+
+#profileDropdown button:hover span {
+  transform: translateX(4px);
+}
+
+/* Logout button merah */
+#profileDropdown button:has(.fa-right-from-bracket):hover {
+  background-color: rgba(239, 68, 68, 0.08);
+}
+
+#profileDropdown button:has(.fa-right-from-bracket):hover::after {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+#profileDropdown button:has(.fa-right-from-bracket):hover i {
+  color: #ef4444 !important;
+}
+
+/* ========== CHECKBOX HARI (ROUTINE) ========== */
 .day-checkbox:checked + span {
   background-color: #6366f1;
   color: white;
 }
 
-/* Atau pakai parent styling */
 label:has(.day-checkbox:checked) {
   background-color: #6366f1 !important;
   color: white !important;
   border-color: #6366f1 !important;
 }
 
-.filter-btn.active {
-  color: #6366f1 !important;
-  font-weight: 600 !important;
+/* ========== CHART ========== */
+#taskChart {
+  margin: 0 auto;
+}
+
+/* ========== TOGGLE SWITCH ========== */
+.toggle-switch {
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  background: #cbd5e1;
+  border-radius: 24px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle-switch:checked {
+  background: #6366f1;
+}
+
+.toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.toggle-switch:checked::before {
+  transform: translateX(20px);
+}
+
+.dark .toggle-switch {
+  background: #334155;
+}
+
+.dark .toggle-switch:checked {
+  background: #818cf8;
+}
+
+/* ========== ANIMATIONS ========== */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (min-width: 1024px) {
+  #sidebar {
+    position: relative !important;
+    transform: translateX(0) !important;
+  }
+  #openSidebar,
+  #toggleSidebar {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  button,
+  [onclick] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ========== UTILITIES ========== */
+.text-gradient {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+button:active,
+.nav-btn:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+
+/* GLOBAL CLICKABLE POINTER */
+button, a, label, select,
+input[type="button"], input[type="submit"],
+input[type="checkbox"], input[type="radio"],
+[onclick], .nav-btn, .music-btn, .active-tab,
+#overlay, #heatmapGrid div {
+  cursor: pointer !important;
+}
+
+/* ========== LOGIN ANIMATIONS ========== */
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Tab button styling */
+.tab-btn-login {
+  transition: all 0.3s ease;
 }

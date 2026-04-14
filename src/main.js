@@ -12,7 +12,13 @@ import { AppState } from "./modules/state";
 import { saveToLocalStorage } from "./utils/storage";
 import { initToast, showToast, showTaskCompleteToast, showDeadlineToast } from "./utils/toast";
 import { RoutineManager } from "./modules/routines";
+import { ProfileManager } from "./modules/profile";
+import { SettingsManager } from "./modules/settings";
 
+// Di DOMContentLoaded
+
+
+// Export ke global (opsional)
 
 
 // Panggil load saat user login
@@ -33,6 +39,8 @@ window.showToast = showToast;
 window.showTaskCompleteToast = showTaskCompleteToast;
 window.routineManager = RoutineManager;
 window.Dashboard = Dashboard;
+window.profileManager = ProfileManager;
+window.settingsManager = SettingsManager;
 
 window.addEventListener("routines-updated", () => {
   console.log("🔄 Routines updated event received, refreshing dashboard...");
@@ -147,6 +155,56 @@ window.handleResetPassword = async () => {
   closeResetModal();
 };
 
+// ========== LOGIN TAB SWITCHING (SIMPLE VERSION) ==========
+function initLoginTabs() {
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+
+  if (!tabLogin || !tabRegister || !loginForm || !registerForm) return;
+
+  // Reset semua class terlebih dahulu
+  const resetTabs = () => {
+    [tabLogin, tabRegister].forEach(tab => {
+      tab.classList.remove("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
+      tab.classList.add("text-gray-500", "dark:text-gray-400", "bg-transparent");
+    });
+  };
+
+  // Fungsi aktifkan tab login
+  const activateLoginTab = () => {
+    resetTabs();
+    loginForm.classList.remove("hidden");
+    registerForm.classList.add("hidden");
+    tabLogin.classList.add("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
+    tabLogin.classList.remove("text-gray-500", "dark:text-gray-400", "bg-transparent");
+  };
+
+  // Fungsi aktifkan tab register
+  const activateRegisterTab = () => {
+    resetTabs();
+    registerForm.classList.remove("hidden");
+    loginForm.classList.add("hidden");
+    tabRegister.classList.add("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
+    tabRegister.classList.remove("text-gray-500", "dark:text-gray-400", "bg-transparent");
+  };
+
+  // Hapus event listener lama (pakai off dulu kalo pake jQuery, ini vanilla)
+  tabLogin.removeEventListener("click", activateLoginTab);
+  tabRegister.removeEventListener("click", activateRegisterTab);
+  
+  // Pasang event listener baru
+  tabLogin.addEventListener("click", activateLoginTab);
+  tabRegister.addEventListener("click", activateRegisterTab);
+}
+
+// Panggil setelah DOM ready
+document.addEventListener("DOMContentLoaded", () => {
+  initLoginTabs();
+  // ... kode init lo yang lain
+});
+
 // Tab切换
 document.getElementById("tabLogin")?.addEventListener("click", () => {
   document.getElementById("loginForm").classList.remove("hidden");
@@ -172,6 +230,17 @@ document.addEventListener("DOMContentLoaded", () => {
   MusicPlayer.init();
   NotificationManager.init();
   RoutineManager.initModalListener();
+  ProfileManager.init();
+  SettingsManager.init();
+  // Dashboard.initResizeListener();
+
+  const originalRenderAuthState = UI.renderAuthState;
+  UI.renderAuthState = function(user) {
+    originalRenderAuthState.call(this, user);
+    if (user) {
+      setTimeout(() => ProfileManager.updateUserInfo(), 100);
+    }
+  };
 
   // 🔥 TAMBAHKAN INI - Request notification permission after user interaction
   const requestNotificationAfterInteraction = async () => {
