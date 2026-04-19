@@ -8,6 +8,26 @@ import { Dashboard } from "./dashboard";
 const NOTES_COLLECTION = collection(db, "notes");
 
 export const NoteManager = {
+
+  getSearchFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const search = params.get('search');
+  if (search) {
+    document.getElementById("globalSearch").value = search;
+    this.render(search);
+  }
+},
+
+updateSearchInURL(searchTerm) {
+  const url = new URL(window.location);
+  if (searchTerm) {
+    url.searchParams.set('search', searchTerm);
+  } else {
+    url.searchParams.delete('search');
+  }
+  window.history.pushState({}, '', url);
+},
+
   async load() {
     const user = AppState.currentUser;
     if (!user) return;
@@ -27,8 +47,11 @@ export const NoteManager = {
   openModal(id = null) {
     const modal = document.getElementById("noteModal");
     const form = document.getElementById("noteForm");
+    const state = { modal: 'note', id: id || null };
+  window.history.pushState(state, '', window.location.href);
 
     if (!modal) return;
+
 
     if (id) {
       const note = AppState.notes.find(n => n.id === id);
@@ -45,6 +68,14 @@ export const NoteManager = {
 
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+
+    const onPopState = (e) => {
+    if (!e.state || !e.state.modal) {
+      this.closeModal();
+      window.removeEventListener('popstate', onPopState);
+    }
+  };
+  window.addEventListener('popstate', onPopState);
   },
 
   closeModal() {
@@ -54,6 +85,7 @@ export const NoteManager = {
       modal.classList.remove("flex");
     }
     document.getElementById("noteForm").reset();
+    document.getElementById("noteId").value = "";
   },
 
   async save(e) {

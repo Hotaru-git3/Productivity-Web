@@ -327,12 +327,23 @@ export const RoutineManager = {
   const modal = document.getElementById("routineModal");
   if (!modal) return;
 
+  const state = { modal: 'routine', action: 'add' };
+  window.history.pushState(state, '', window.location.href);
+
   const form = document.getElementById("routineForm");
   if (form) {
     form.reset();
     delete form.dataset.editId;
   }
   
+  const onPopState = (e) => {
+    if (!e.state || !e.state.modal) {
+      this.closeModal();
+      window.removeEventListener('popstate', onPopState);
+    }
+  };
+  window.addEventListener('popstate', onPopState);
+
   document.getElementById("routineTitle").value = "";
   document.getElementById("routineIcon").value = "";
   document.getElementById("routineStartTime").value = "07:00";
@@ -367,7 +378,7 @@ export const RoutineManager = {
 
 // 🔥 TAMBAHKAN INI - FUNGSI EDIT
 openEditModal(id) {
-  console.log("🔥 openEditModal dipanggil dengan id:", id);
+  console.log("openEditModal dipanggil dengan id:", id);
   
   const routine = AppState.routines.find(r => r.id === id);
   if (!routine) {
@@ -377,6 +388,14 @@ openEditModal(id) {
 
   const modal = document.getElementById("routineModal");
   if (!modal) return;
+
+  const onPopState = (e) => {
+    if (!e.state || !e.state.modal) {
+      this.closeModal();
+      window.removeEventListener('popstate', onPopState);
+    }
+  };
+  window.addEventListener('popstate', onPopState);
 
   const form = document.getElementById("routineForm");
   if (form) {

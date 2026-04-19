@@ -247,28 +247,63 @@ export const Dashboard = {
 },
 
   renderHeatmap() {
-    const grid = document.getElementById("heatmapGrid");
-    if (!grid) return;
-    grid.innerHTML = "";
+  const grid = document.getElementById("heatmapGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
 
-    const today = new Date();
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split("T")[0];
-      const count = AppState.activityLog[dateStr] || 0;
+  const today = new Date();
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split("T")[0];
+    const count = AppState.activityLog[dateStr] || 0;
 
-      let colorClass = "bg-gray-200 dark:bg-gray-700";
-      if (count >= 1 && count <= 2) colorClass = "bg-indigo-300 dark:bg-indigo-900/60";
-      else if (count >= 3 && count <= 4) colorClass = "bg-indigo-400 dark:bg-indigo-700";
-      else if (count >= 5) colorClass = "bg-indigo-600 dark:bg-indigo-500";
+    let colorClass = "bg-gray-200 dark:bg-gray-700";
+    if (count >= 1 && count <= 2) colorClass = "bg-indigo-300 dark:bg-indigo-900/60";
+    else if (count >= 3 && count <= 4) colorClass = "bg-indigo-400 dark:bg-indigo-700";
+    else if (count >= 5) colorClass = "bg-indigo-600 dark:bg-indigo-500";
 
-      const box = document.createElement("div");
-      box.className = `w-4 h-4 md:w-5 md:h-5 rounded-sm ${colorClass} transition-all duration-300 hover:ring-2 hover:ring-primary cursor-pointer`;
-      box.title = `${dateStr}: ${count} aktivitas`;
-      grid.appendChild(box);
-    }
-  },
+    const box = document.createElement("div");
+    box.className = `w-4 h-4 md:w-5 md:h-5 rounded-sm ${colorClass} transition-all duration-300 hover:ring-2 hover:ring-primary cursor-pointer`;
+    box.title = `${dateStr}: ${count} aktivitas`; // tooltip native (works on mobile tap & hold)
+    
+    // 🔥 TAMBAHKAN UNTUK MOBILE: tampilkan detail saat tap
+    box.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.showHeatmapDetail(dateStr, count, box);
+    });
+    
+    grid.appendChild(box);
+  }
+},
+
+showHeatmapDetail(dateStr, count, targetBox) {
+  // Hapus tooltip sementara yang mungkin sudah ada
+  const existingTooltip = document.getElementById("heatmap-tooltip");
+  if (existingTooltip) existingTooltip.remove();
+  
+  // Buat tooltip custom
+  const tooltip = document.createElement("div");
+  tooltip.id = "heatmap-tooltip";
+  tooltip.className = "fixed z-50 bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg pointer-events-none animate-fade-in";
+  tooltip.innerHTML = `
+    <strong>${dateStr}</strong><br>
+    ${count} aktivitas
+    <div class="text-[10px] text-gray-300 mt-1">${count === 0 ? 'Tidak ada aktivitas' : count === 1 ? '1 aktivitas' : `${count} aktivitas`}</div>
+  `;
+  
+  document.body.appendChild(tooltip);
+  
+  // Posisikan di dekat box yang diklik
+  const rect = targetBox.getBoundingClientRect();
+  tooltip.style.left = `${rect.left + rect.width / 2 - 60}px`;
+  tooltip.style.top = `${rect.top - 40}px`;
+  
+  // Auto hilang setelah 2 detik
+  setTimeout(() => {
+    if (tooltip) tooltip.remove();
+  }, 2000);
+},
 
   updateMiniStats() {
     const streakCount = document.getElementById("streakCount");

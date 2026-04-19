@@ -228,6 +228,29 @@ export const TaskManager = {
   }
 },
 
+// Di dalam TaskManager, tambahin method ini:
+
+getFilterFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const filter = params.get('filter');
+  if (filter && ['all', 'pending', 'done'].includes(filter)) {
+    AppState.taskFilter = filter;
+    this.updateFilterButtons();
+    this.render();
+  }
+},
+
+setFilter(filter) {
+  AppState.taskFilter = filter;
+  this.render();
+  this.updateFilterButtons();
+
+  // Update URL query string
+  const url = new URL(window.location);
+  url.searchParams.set('filter', filter);
+  window.history.pushState({}, '', url);
+},
+
   render() {
     const list = document.getElementById("taskList");
     if (!list) return;

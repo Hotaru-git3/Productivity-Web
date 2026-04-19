@@ -14,7 +14,6 @@ export const renderCurrentDate = () => {
   const today = new Date();
   
   // Pake Intl.DateTimeFormat biar dapet format lokal yang enak dibaca
-  // Contoh output: "Senin, 29 Maret 2026"
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   dateElement.innerText = today.toLocaleDateString('id-ID', options);
 };
@@ -79,9 +78,32 @@ export const UI = {
     this.overlay = document.getElementById("overlay");
     this.initTheme();
     this.initEventListeners();
+
+    // hash 
+    window.addEventListener("hashchange", () => this.handleHashChange());
+    this.handleHashChange();
   },
 
-  switchTab(tabId) {
+   handleHashChange() {
+    let hash = window.location.hash.slice(1);
+    const validTabs = ['dashboard', 'tasks', 'notes', 'routines', 'chat', 'tools', 'settings'];
+    
+    if (!hash || !validTabs.includes(hash)) {
+      hash = 'dashboard';
+      window.location.hash = 'dashboard';
+    }
+    
+    this.switchTab(hash, false);
+    
+    // Load filter/search dari URL saat tab berubah
+    if (hash === 'tasks') {
+      TaskManager.getFilterFromURL();
+    } else if (hash === 'notes') {
+      NoteManager.getSearchFromURL();
+    }
+  },
+
+  switchTab(tabId, updateHistory = true) {
     document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
     const targetTab = document.getElementById(tabId);
     if (targetTab) targetTab.classList.remove("hidden");
@@ -92,6 +114,10 @@ export const UI = {
     });
 
     if (this.isMobile()) this.closeSidebar();
+
+    if (updateHistory && window.location.hash !== `#${tabId}`) {
+      window.location.hash = tabId;
+    }
   },
 
   openSidebar() {

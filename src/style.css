@@ -590,3 +590,25 @@ input[type="checkbox"], input[type="radio"],
 .tab-btn-login {
   transition: all 0.3s ease;
 }
+
+/* Heatmap tooltip untuk mobile */
+#heatmap-tooltip {
+  backdrop-filter: blur(8px);
+  background-color: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+  max-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+}
+
+/* Animasi fade in/out */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#heatmap-tooltip {
+  animation: fadeIn 0.15s ease-out;
+}

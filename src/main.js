@@ -283,9 +283,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("noteForm")?.addEventListener("submit", (e) => NoteManager.save(e));
   document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => window.confirmModal.confirm());
   document.getElementById("globalSearch")?.addEventListener("input", (e) => {
-    UI.switchTab("notes");
-    NoteManager.render(e.target.value);
-  });
+  const searchTerm = e.target.value;
+  UI.switchTab("notes");
+  NoteManager.render(searchTerm);
+  NoteManager.updateSearchInURL(searchTerm);
+});
   document.getElementById("fileInput")?.addEventListener("change", (e) => ChatManager.handleFileSelect(e));
   document.getElementById("removeImageBtn")?.addEventListener("click", () => ChatManager.clearAttachment());
   document.getElementById("chatForm")?.addEventListener("submit", (e) => ChatManager.sendMessage(e));
