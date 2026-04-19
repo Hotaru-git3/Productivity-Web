@@ -256,7 +256,9 @@
         </div>
         <div class="relative">
           <button id="profileMenuBtn" class="focus:outline-none group flex items-center gap-2">
-            <div id="userAvatar" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm transition group-hover:ring-2 group-hover:ring-primary group-hover:ring-offset-2 dark:group-hover:ring-offset-darkBg"></div>
+            <div id="userAvatar"
+              class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm transition group-hover:ring-2 group-hover:ring-primary group-hover:ring-offset-2 dark:group-hover:ring-offset-darkBg">
+            </div>
             <!-- Panah indikator -->
             <i id="dropdownArrow"
               class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
@@ -269,43 +271,48 @@
 
           <!-- Dropdown menu - clean minimalist -->
           <div id="profileDropdown"
-  class="absolute right-0 mt-3 w-64 bg-white dark:bg-darkCard rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden z-20 hidden transition-all duration-200">
-  <!-- User info section -->
-  <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-    <div class="flex items-center gap-3">
-      <div id="dropdownAvatar"
-        class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm">
-      </div>
-      <div class="flex-1 min-w-0">
-        <p class="text-sm font-semibold text-gray-800 dark:text-white truncate" id="dropdownUserName">Loading...</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 truncate" id="dropdownUserEmail">user@example.com</p>
-      </div>
-    </div>
-  </div>
+            class="absolute right-0 mt-3 w-64 bg-white dark:bg-darkCard rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden z-20 hidden transition-all duration-200">
+            <!-- User info section -->
+            <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+              <div class="flex items-center gap-3">
+                <div id="dropdownAvatar"
+                  class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-gray-800 dark:text-white truncate" id="dropdownUserName">
+                    Loading...</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate" id="dropdownUserEmail">user@example.com
+                  </p>
+                </div>
+              </div>
+            </div>
 
-  <!-- Menu items dengan efek slider -->
-  <div class="py-1">
-    <button onclick="window.profileManager.showProfile()"
-      class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
-      <i class="fa-regular fa-user w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
-      <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Profile</span>
-    </button>
-    <button onclick="window.profileManager.showSettings()"
-      class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
-      <i class="fa-solid fa-sliders-h w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
-      <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Pengaturan</span>
-    </button>
-  </div>
+            <!-- Menu items dengan efek slider -->
+            <div class="py-1">
+              <button onclick="window.profileManager.showProfile()"
+                class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
+                <i
+                  class="fa-regular fa-user w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
+                <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Profile</span>
+              </button>
+              <button onclick="window.profileManager.showSettings()"
+                class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
+                <i
+                  class="fa-solid fa-sliders-h w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
+                <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Pengaturan</span>
+              </button>
+            </div>
 
-  <!-- Divider + Logout -->
-  <div class="border-t border-gray-100 dark:border-gray-800 py-1">
-    <button onclick="window.auth.logout()"
-      class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 flex items-center gap-3 group/logout">
-      <i class="fa-solid fa-right-from-bracket w-4 text-red-500 transition-all duration-200 group-hover/logout:translate-x-0.5"></i>
-      <span class="transition-all duration-200 group-hover/logout:translate-x-0.5">Logout</span>
-    </button>
-  </div>
-</div>
+            <!-- Divider + Logout -->
+            <div class="border-t border-gray-100 dark:border-gray-800 py-1">
+              <button onclick="window.auth.logout()"
+                class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 flex items-center gap-3 group/logout">
+                <i
+                  class="fa-solid fa-right-from-bracket w-4 text-red-500 transition-all duration-200 group-hover/logout:translate-x-0.5"></i>
+                <span class="transition-all duration-200 group-hover/logout:translate-x-0.5">Logout</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -521,17 +528,16 @@
         <!-- TOOLS TAB -->
         <section id="tools" class="tab-content hidden animate-fade-in">
           <h2 class="text-2xl font-bold mb-6"><span class="text-gradient px-2">Quick Tools</span>🛠️</h2>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- Grid untuk 2 card (Pomodoro + Word of the Day) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Pomodoro Timer Card -->
             <div
               class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
               <div class="text-center">
                 <h3 class="font-bold text-xl mb-1">🍅 Pomodoro Timer</h3>
-                <p class="text-gray-500 text-sm mb-5">
-                  Fokus 25 menit, istirahat 5 menit
-                </p>
-                <div class="text-6xl font-bold mb-6 font-mono text-primary tracking-wider" id="pomodoroDisplay">
-                  25:00
+                <p class="text-gray-500 text-sm mb-5">Fokus 25 menit, istirahat 5 menit</p>
+                <div class="text-6xl font-bold mb-6 font-mono text-primary tracking-wider" id="pomodoroDisplay">25:00
                 </div>
                 <div class="flex justify-center gap-3 mb-6">
                   <button id="pomodoroStart"
@@ -600,44 +606,32 @@
             </div>
 
             <!-- Word of the Day Card -->
-            <div class="glass-card
-                p-6 rounded-2xl border-gray-100 dark:border-gray-800 text-center flex flex-col justify-center">
+            <div
+              class="glass-card p-6 rounded-2xl border-gray-100 dark:border-gray-800 text-center flex flex-col justify-center">
               <div
                 class="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
                 <i class="fa-solid fa-language text-white text-xl"></i>
               </div>
-              <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">
-                📖 Word of the Day
-              </p>
-              <h3 id="jpKanji" class="text-4xl font-bold mb-2 text-gray-800 dark:text-white">
-                勉強
-              </h3>
-              <p id="jpRomaji" class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                (Benkyou) - Belajar
-              </p>
+              <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">📖 Word of the Day</p>
+              <h3 id="jpKanji" class="text-4xl font-bold mb-2 text-gray-800 dark:text-white">勉強</h3>
+              <p id="jpRomaji" class="text-sm text-gray-500 dark:text-gray-400 mb-4">(Benkyou) - Belajar</p>
               <div class="h-px w-12 bg-primary mx-auto rounded-full mb-4"></div>
-              <p class="text-xs italic text-gray-400 mb-4">
-                "Semangat nugasnya,"
-              </p>
+              <p class="text-xs italic text-gray-400 mb-4">"Semangat nugasnya,"</p>
               <div class="mt-2 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-center gap-6">
                 <div class="text-center">
-                  <p class="text-xl font-bold text-primary" id="streakCount">
-                    0
-                  </p>
+                  <p class="text-xl font-bold text-primary" id="streakCount">0</p>
                   <p class="text-[10px] text-gray-400 mt-0.5">Streak</p>
                 </div>
                 <div class="text-center">
-                  <p class="text-xl font-bold text-green-500" id="todayTasksDone">
-                    0
-                  </p>
-                  <p class="text-[10px] text-gray-400 mt-0.5">
-                    Selesai Hari Ini
-                  </p>
+                  <p class="text-xl font-bold text-green-500" id="todayTasksDone">0</p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">Selesai Hari Ini</p>
                 </div>
               </div>
             </div>
-            <div id="weeklyFocusChart"></div>
           </div>
+
+          <!-- 🔥 Weekly Focus Chart - Full Width di bawah grid -->
+          <div id="weeklyFocusChart"></div>
         </section>
 
         <section id="settings" class="tab-content hidden animate-fade-in">
