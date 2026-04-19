@@ -75,12 +75,7 @@ init() {
   const nameEl = document.getElementById("dropdownUserName");
   const emailEl = document.getElementById("dropdownUserEmail");
   const avatarEl = document.getElementById("userAvatar");
-  
-  // Hapus semua console.log yang menampilkan user
-  // console.log("updateUserInfo called");
-  // console.log("user:", user);
-  // console.log("nameEl:", nameEl);
-  // console.log("emailEl:", emailEl);
+  const dropdownAvatarEl = document.getElementById("dropdownAvatar");
   
   if (user) {
     const displayName = user.displayName || user.email?.split('@')[0] || "User";
@@ -89,6 +84,7 @@ init() {
     if (nameEl) nameEl.innerText = displayName;
     if (emailEl) emailEl.innerText = user.email || "";
     if (avatarEl) avatarEl.innerText = initials;
+    if (dropdownAvatarEl) dropdownAvatarEl.innerText = initials;
   }
 },
   
