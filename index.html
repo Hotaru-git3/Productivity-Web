@@ -1,241 +1,217 @@
 <!doctype html>
 <html lang="id" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=yes"
-    />
-    <title>Co-Dash | Productivity Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/src/style.css" />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E"
-    />
-  </head>
-  <body>
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-soft">
-  
-  <!-- Modal Login Glassmorphism -->
-  <div class="relative rounded-3xl overflow-hidden glass-card w-full max-w-md mx-auto animate-fade-in-up">
-    
-    <!-- Decorative circle -->
-    <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
-    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl"></div>
-    
-    <!-- Header -->
-<div class="text-center pt-8 px-8">
-  <div class="w-16 h-16 logo-gradient bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-float">
-    <i class="fa-solid fa-graduation-cap text-3xl text-white"></i>
-  </div>
-  <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">Co-Dash</h1>
-  <p class="text-sm text-gray-500 dark:text-gray-400">Masuk atau daftar untuk melanjutkan produktivitas</p>
-</div>
-    
-    <!-- Tab Navigation -->
-    <div class="flex mx-8 mt-6 bg-gray-100 dark:bg-gray-800/50 rounded-xl p-1">
-      <button id="tabLogin" class="tab-btn-login flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-800 dark:text-white bg-white dark:bg-gray-700 shadow-sm">Login</button>
-      <button id="tabRegister" class="tab-btn-login flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Daftar</button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Co-Dash | Productivity Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E" />
+</head>
+
+<body>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-soft">
+
+    <!-- Modal Login Glassmorphism -->
+    <div class="relative rounded-3xl overflow-hidden glass-card w-full max-w-md mx-auto animate-fade-in-up">
+
+      <!-- Decorative circle -->
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl"></div>
+
+      <!-- Header -->
+      <div class="text-center pt-8 px-8">
+        <div
+          class="w-16 h-16 logo-gradient bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg animate-float">
+          <i class="fa-solid fa-graduation-cap text-3xl text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">Co-Dash</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Masuk atau daftar untuk melanjutkan produktivitas</p>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="flex mx-8 mt-6 bg-gray-100 dark:bg-gray-800/50 rounded-xl p-1">
+        <button id="tabLogin"
+          class="tab-btn-login flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-800 dark:text-white bg-white dark:bg-gray-700 shadow-sm">Login</button>
+        <button id="tabRegister"
+          class="tab-btn-login flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Daftar</button>
+      </div>
+
+      <!-- Form Container -->
+      <div class="p-8 pt-5">
+        <!-- Login Form -->
+        <div id="loginForm" class="space-y-4 transition-all duration-300">
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="email" id="loginEmail" placeholder="Email"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+          </div>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="password" id="loginPassword" placeholder="Password"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+          </div>
+          <button onclick="handleEmailLogin()"
+            class="btn-primary w-full py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
+            <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Login
+          </button>
+          <div class="text-center">
+            <button onclick="showResetPassword()" class="text-xs text-primary hover:underline transition">
+              Lupa password?
+            </button>
+          </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="hidden space-y-4 transition-all duration-300">
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="email" id="registerEmail" placeholder="Email"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+          </div>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="password" id="registerPassword" placeholder="Password (min. 6 karakter)"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+          </div>
+          <button onclick="handleEmailRegister()"
+            class="btn-primary w-full py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
+            <i class="fa-solid fa-user-plus mr-2"></i> Daftar
+          </button>
+        </div>
+
+        <!-- Divider -->
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+          </div>
+          <div class="relative flex justify-center text-xs">
+            <span class="px-3 bg-white dark:bg-darkCard text-gray-400">atau</span>
+          </div>
+        </div>
+
+        <!-- Google Button -->
+        <button onclick="window.auth.loginWithGoogle()"
+          class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium py-3 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google" />
+          Lanjut dengan Google
+        </button>
+      </div>
     </div>
-    
-    <!-- Form Container -->
-    <div class="p-8 pt-5">
-      <!-- Login Form -->
-      <div id="loginForm" class="space-y-4 transition-all duration-300">
-        <div class="relative">
+  </div>
+
+  <!-- Reset Password Modal -->
+  <div id="resetModal"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[100] p-4">
+    <div class="relative glass-card w-full max-w-sm mx-auto animate-fade-in-up rounded-2xl overflow-hidden">
+
+      <!-- Decorative circle -->
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl"></div>
+
+      <!-- Header -->
+      <div class="text-center pt-6 px-6">
+        <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg"
+          style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+          <i class="fa-solid fa-key text-2xl text-white"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white">Reset Password</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Kami akan kirim link reset ke email Anda</p>
+      </div>
+
+      <!-- Form -->
+      <div class="p-6 pt-2">
+        <div class="relative mb-4">
           <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="email" id="loginEmail" placeholder="Email" 
+          <input type="email" id="resetEmail" placeholder="Email Anda"
             class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
         </div>
-        <div class="relative">
-          <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="password" id="loginPassword" placeholder="Password" 
-            class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+
+        <!-- Pesan info -->
+        <div
+          class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center gap-2 justify-center bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg">
+          <i class="fa-regular fa-envelope text-amber-500"></i>
+          <span>Link reset akan dikirim ke email Anda.</span>
+          <span class="text-amber-600 dark:text-amber-400 font-medium">Cek folder Spam!</span>
         </div>
-        <button onclick="handleEmailLogin()" class="btn-primary w-full py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
-          <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Login
-        </button>
-        <div class="text-center">
-          <button onclick="showResetPassword()" class="text-xs text-primary hover:underline transition">
-            Lupa password?
+
+        <!-- Buttons -->
+        <div class="flex gap-3">
+          <button onclick="closeResetModal()"
+            class="flex-1 px-4 py-2.5 rounded-xl font-medium transition-all duration-300 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+            Batal
+          </button>
+          <button onclick="handleResetPassword()"
+            class="flex-1 px-4 py-2.5 btn-primary glow rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
+            <i class="fa-solid fa-paper-plane mr-2"></i> Kirim
           </button>
         </div>
-      </div>
-      
-      <!-- Register Form -->
-      <div id="registerForm" class="hidden space-y-4 transition-all duration-300">
-        <div class="relative">
-          <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="email" id="registerEmail" placeholder="Email" 
-            class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-        </div>
-        <div class="relative">
-          <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="password" id="registerPassword" placeholder="Password (min. 6 karakter)" 
-            class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-        </div>
-        <button onclick="handleEmailRegister()" class="btn-primary w-full py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
-          <i class="fa-solid fa-user-plus mr-2"></i> Daftar
-        </button>
-      </div>
-      
-      <!-- Divider -->
-      <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
-        </div>
-        <div class="relative flex justify-center text-xs">
-          <span class="px-3 bg-white dark:bg-darkCard text-gray-400">atau</span>
-        </div>
-      </div>
-      
-      <!-- Google Button -->
-      <button onclick="window.auth.loginWithGoogle()" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium py-3 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
-        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google" />
-        Lanjut dengan Google
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Reset Password Modal -->
-<div id="resetModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[100] p-4">
-  <div class="relative glass-card w-full max-w-sm mx-auto animate-fade-in-up rounded-2xl overflow-hidden">
-    
-    <!-- Decorative circle -->
-    <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
-    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl"></div>
-    
-    <!-- Header -->
-    <div class="text-center pt-6 px-6">
-      <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
-        <i class="fa-solid fa-key text-2xl text-white"></i>
-      </div>
-      <h3 class="text-xl font-bold text-gray-800 dark:text-white">Reset Password</h3>
-      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Kami akan kirim link reset ke email Anda</p>
-    </div>
-    
-    <!-- Form -->
-    <div class="p-6 pt-2">
-      <div class="relative mb-4">
-        <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-        <input type="email" id="resetEmail" placeholder="Email Anda" 
-          class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-      </div>
-      
-      <!-- Pesan info -->
-      <div class="text-xs text-gray-500 dark:text-gray-400 mb-5 flex items-center gap-2 justify-center bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg">
-        <i class="fa-regular fa-envelope text-amber-500"></i>
-        <span>Link reset akan dikirim ke email Anda.</span>
-        <span class="text-amber-600 dark:text-amber-400 font-medium">Cek folder Spam!</span>
-      </div>
-      
-      <!-- Buttons -->
-      <div class="flex gap-3">
-        <button onclick="closeResetModal()" 
-          class="flex-1 px-4 py-2.5 rounded-xl font-medium transition-all duration-300 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
-          Batal
-        </button>
-        <button onclick="handleResetPassword()" 
-          class="flex-1 px-4 py-2.5 btn-primary glow rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
-          <i class="fa-solid fa-paper-plane mr-2"></i> Kirim
-        </button>
       </div>
     </div>
   </div>
-</div>
 
-    <!-- MAIN DASHBOARD -->
-    <div
-      id="mainDashboard"
-      class="hidden flex h-screen w-full bg-gray-50 dark:bg-darkBg bg-gradient-soft text-gray-800 dark:text-gray-100"
-    >
-      <div
-        id="overlay"
-        class="fixed inset-0 bg-black/40 z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"
-      ></div>
+  <!-- MAIN DASHBOARD -->
+  <div id="mainDashboard"
+    class="hidden flex h-screen w-full bg-gray-50 dark:bg-darkBg bg-gradient-soft text-gray-800 dark:text-gray-100">
+    <div id="overlay"
+      class="fixed inset-0 bg-black/40 z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300">
+    </div>
 
-      <!-- SIDEBAR -->
-      <aside
-        id="sidebar"
-        class="w-64 bg-white dark:bg-darkCard shadow-lg flex flex-col border-r border-gray-200 dark:border-gray-800 fixed top-0 left-0 h-full z-50 transform transition-transform duration-300 -translate-x-full lg:translate-x-0"
-      >
-        <div class="p-6 flex justify-between items-center">
-          <h1
-            class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-          >
-            <i class="fa-solid fa-graduation-cap mr-2"></i>Co-Dash
-          </h1>
-          <button
-            id="closeSidebarBtn"
-            class="lg:hidden text-gray-500 hover:text-primary"
-          >
-            <i class="fa-solid fa-times"></i>
-          </button>
-        </div>
-        <nav class="flex-1 px-4 space-y-2 mt-4">
-          <button
-            onclick="window.app.switchTab('dashboard')"
-            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left active-tab"
-            data-tab="dashboard"
-          >
-            <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
-          </button>
-          <button
-            onclick="window.app.switchTab('routines')"
-            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
-            data-tab="routines"
-          >
-            <i class="fa-solid fa-calendar-check w-6"></i> Daily Routine
-          </button>
-          <button
-            onclick="window.app.switchTab('tasks')"
-            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
-            data-tab="tasks"
-          >
-            <i class="fa-solid fa-list-check w-6"></i> Tasks
-          </button>
-          <button
-            onclick="window.app.switchTab('notes')"
-            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
-            data-tab="notes"
-          >
-            <i class="fa-solid fa-book w-6"></i> Notes
-          </button>
-          <button
-            onclick="window.app.switchTab('chat')"
-            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
-            data-tab="chat"
-          >
-            <i class="fa-solid fa-robot w-6"></i> AI Assistant
-          </button>
-          <button
-            onclick="window.app.switchTab('tools')"
-            class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
-            data-tab="tools"
-          >
-            <i class="fa-solid fa-toolbox w-6"></i> Tools
-          </button>
-          <button onclick="window.app.switchTab('settings')" 
-  class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
-  data-tab="settings">
-  <i class="fa-solid fa-sliders-h w-6"></i> Pengaturan
-</button>
-        </nav>
-        <!-- <div class="p-4 border-t border-gray-100 dark:border-gray-800">
+    <!-- SIDEBAR -->
+    <aside id="sidebar"
+      class="w-64 bg-white dark:bg-darkCard shadow-lg flex flex-col border-r border-gray-200 dark:border-gray-800 fixed top-0 left-0 h-full z-50 transform transition-transform duration-300 -translate-x-full lg:translate-x-0">
+      <div class="p-6 flex justify-between items-center">
+        <h1 class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <i class="fa-solid fa-graduation-cap mr-2"></i>Co-Dash
+        </h1>
+        <button id="closeSidebarBtn" class="lg:hidden text-gray-500 hover:text-primary">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+      <nav class="flex-1 px-4 space-y-2 mt-4">
+        <button onclick="window.app.switchTab('dashboard')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left active-tab"
+          data-tab="dashboard">
+          <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
+        </button>
+        <button onclick="window.app.switchTab('routines')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+          data-tab="routines">
+          <i class="fa-solid fa-calendar-check w-6"></i> Daily Routine
+        </button>
+        <button onclick="window.app.switchTab('tasks')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+          data-tab="tasks">
+          <i class="fa-solid fa-list-check w-6"></i> Tasks
+        </button>
+        <button onclick="window.app.switchTab('notes')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+          data-tab="notes">
+          <i class="fa-solid fa-book w-6"></i> Notes
+        </button>
+        <button onclick="window.app.switchTab('chat')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+          data-tab="chat">
+          <i class="fa-solid fa-robot w-6"></i> AI Assistant
+        </button>
+        <button onclick="window.app.switchTab('tools')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+          data-tab="tools">
+          <i class="fa-solid fa-toolbox w-6"></i> Tools
+        </button>
+        <button onclick="window.app.switchTab('settings')"
+          class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left"
+          data-tab="settings">
+          <i class="fa-solid fa-sliders-h w-6"></i> Pengaturan
+        </button>
+      </nav>
+      <!-- <div class="p-4 border-t border-gray-100 dark:border-gray-800">
           <button
             onclick="window.auth.logout()"
             class="w-full flex items-center p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"
@@ -243,926 +219,630 @@
             <i class="fa-solid fa-right-from-bracket w-6"></i> Keluar
           </button>
         </div> -->
-        <div class="mt-auto p-4 border-t dark:border-gray-800">
-          <p
-            class="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold"
-          >
-            Connect with Me
-          </p>
-          <div class="flex items-center gap-3">
-            <a
-              href="https://linkedin.com/in/zidane-solahudin-573933345"
-              target="_blank"
-              class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-600 hover:text-white transition"
-            >
-              <i class="fa-brands fa-linkedin-in"></i>
-            </a>
-            <a
-              href="https://instagram.com/zdansln"
-              target="_blank"
-              class="w-9 h-9 flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 hover:bg-pink-600 hover:text-white transition"
-            >
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a
-              href="https://github.com/Hotaru-git3"
-              target="_blank"
-              class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-900 hover:text-white transition"
-            >
-              <i class="fa-brands fa-github"></i>
-            </a>
-          </div>
-        </div>
-      </aside>
-
-      <!-- MAIN CONTENT -->
-      <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <header
-          class="h-16 flex items-center justify-between px-6 glass-card card-animate backdrop-blur-xl border-b border-white/20 z-10"
-        >
-          <div class="flex items-center gap-4">
-            <button
-              id="openSidebarBtn"
-              class="lg:hidden text-gray-500 hover:text-primary"
-            >
-              <i class="fa-solid fa-bars text-xl"></i>
-            </button>
-            <div class="relative hidden sm:block">
-              <i
-                class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
-              ></i>
-              <input
-                type="text"
-                id="globalSearch"
-                placeholder="Cari notes... (Tekan '/')"
-                class="pl-9 pr-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64"
-              />
-            </div>
-          </div>
-          <div class="relative">
-  <button id="profileMenuBtn" class="focus:outline-none group flex items-center gap-2">
-    <!-- Avatar dengan inisial -->
-    <div id="userAvatar" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm transition group-hover:ring-2 group-hover:ring-primary group-hover:ring-offset-2 dark:group-hover:ring-offset-darkBg">
-      ZS
-    </div>
-    <!-- Panah indikator -->
-    <i id="dropdownArrow" class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
-  </button>
-  
-  <!-- Garis bawah (hover line) -->
-  <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></div>
-  
-  <!-- Dropdown menu - clean minimalist -->
-  <div id="profileDropdown" class="absolute right-0 mt-3 w-64 bg-white dark:bg-darkCard rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden z-20 hidden transition-all duration-200">
-    <!-- User info section -->
-    <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm">
-          ZS
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-semibold text-gray-800 dark:text-white truncate" id="dropdownUserName">Zidane Solahudin</p>
-          <p class="text-xs text-gray-500 dark:text-gray-400 truncate" id="dropdownUserEmail">zidane@example.com</p>
+      <div class="mt-auto p-4 border-t dark:border-gray-800">
+        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold">
+          Connect with Me
+        </p>
+        <div class="flex items-center gap-3">
+          <a href="https://linkedin.com/in/zidane-solahudin-573933345" target="_blank"
+            class="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-600 hover:text-white transition">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+          <a href="https://instagram.com/zdansln" target="_blank"
+            class="w-9 h-9 flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 hover:bg-pink-600 hover:text-white transition">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://github.com/Hotaru-git3" target="_blank"
+            class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-900 hover:text-white transition">
+            <i class="fa-brands fa-github"></i>
+          </a>
         </div>
       </div>
-    </div>
-    
-    <!-- Menu items dengan efek slider -->
-    <div class="py-1">
-      <button onclick="window.profileManager.showProfile()" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
-        <i class="fa-regular fa-user w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
-        <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Profile</span>
-      </button>
-      <button onclick="window.profileManager.showSettings()" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
-        <i class="fa-solid fa-sliders-h w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
-        <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Pengaturan</span>
-      </button>
-    </div>
-    
-    <!-- Divider + Logout -->
-    <div class="border-t border-gray-100 dark:border-gray-800 py-1">
-      <button onclick="window.auth.logout()" class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 flex items-center gap-3 group/logout">
-        <i class="fa-solid fa-right-from-bracket w-4 text-red-500 transition-all duration-200 group-hover/logout:translate-x-0.5"></i>
-        <span class="transition-all duration-200 group-hover/logout:translate-x-0.5">Logout</span>
-      </button>
-    </div>
-  </div>
-</div>
-        </header>
+    </aside>
 
-        <div class="flex-1 overflow-y-auto p-6 scroll-smooth" id="content-area">
-          <!-- DASHBOARD TAB -->
-          <section id="dashboard" class="tab-content block animate-fade-in">
-            <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-6">
-  <div>
-    <p id="dateDisplay" class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Memuat tanggal...</p>
-    <h2 id="welcomeText" class="text-2xl font-bold">
-      Welcome Back!
-    </h2>
-  </div>
-  <div id="weatherDisplay" class="text-right">
-    <span class="animate-pulse text-xs text-gray-400">Memeriksa cuaca...</span>
-  </div>
-</div>
-            
-            <div id="routineWidget" class="mb-8"></div>
-            <div id="studyWidget" class="mb-8"></div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div
-                class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
-              >
-                <div class="flex justify-between items-center">
-                  <div>
-                    <p class="text-sm text-gray-500">Tugas Nunggak</p>
-                    <h3
-                      class="text-3xl font-bold text-red-500"
-                      id="stat-pending-tasks"
-                    >
-                      0
-                    </h3>
-                  </div>
-                  <div
-                    class="p-4 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-xl"
-                  >
-                    <i class="fa-solid fa-clock"></i>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
-              >
-                <div class="flex justify-between items-center">
-                  <div>
-                    <p class="text-sm text-gray-500">Total Notes</p>
-                    <h3
-                      class="text-3xl font-bold text-primary"
-                      id="stat-total-notes"
-                    >
-                      0
-                    </h3>
-                  </div>
-                  <div
-                    class="p-4 bg-indigo-100 dark:bg-indigo-900/30 text-primary rounded-xl"
-                  >
-                    <i class="fa-solid fa-book"></i>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
-              >
-                <div class="flex justify-between items-center">
-                  <div>
-                    <p class="text-sm text-gray-500">Tugas Selesai</p>
-                    <h3
-                      class="text-3xl font-bold text-green-500"
-                      id="stat-done-tasks"
-                    >
-                      0
-                    </h3>
-                  </div>
-                  <div
-                    class="p-4 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-xl"
-                  >
-                    <i class="fa-solid fa-check-double"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-              <div
-                class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
-              >
-                <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-  <i class="fa-solid fa-chart-pie text-primary"></i> 
-  <span class="text-gradient">Task Progress</span>
-</h3>
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <header
+        class="h-16 flex items-center justify-between px-6 glass-card card-animate backdrop-blur-xl border-b border-white/20 z-10">
+        <div class="flex items-center gap-4">
+          <button id="openSidebarBtn" class="lg:hidden text-gray-500 hover:text-primary">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          <div class="relative hidden sm:block">
+            <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text" id="globalSearch" placeholder="Cari notes... (Tekan '/')"
+              class="pl-9 pr-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64" />
+          </div>
+        </div>
+        <div class="relative">
+          <button id="profileMenuBtn" class="focus:outline-none group flex items-center gap-2">
+            <div id="userAvatar" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm transition group-hover:ring-2 group-hover:ring-primary group-hover:ring-offset-2 dark:group-hover:ring-offset-darkBg"></div>
+            <!-- Panah indikator -->
+            <i id="dropdownArrow"
+              class="fa-solid fa-chevron-down text-xs text-gray-400 transition-transform duration-200"></i>
+          </button>
+
+          <!-- Garis bawah (hover line) -->
+          <div
+            class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full">
+          </div>
+
+          <!-- Dropdown menu - clean minimalist -->
+          <div id="profileDropdown"
+            class="absolute right-0 mt-3 w-64 bg-white dark:bg-darkCard rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden z-20 hidden transition-all duration-200">
+            <!-- User info section -->
+            <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+              <div class="flex items-center gap-3">
                 <div
-                  class="relative w-full max-w-[280px] md:max-w-[220px] lg:max-w-[200px] mx-auto aspect-square"
-                >
-                  <div id="taskChart"></div>
+                  class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+                  ZS
                 </div>
-              </div>
-              <div
-                class="lg:col-span-2 glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
-              >
-                <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-  <i class="fa-solid fa-fire text-orange-500"></i> 
-  <span class="text-gradient">Up Next / Deadline Mepet</span>
-</h3>
-                <ul id="upNextList" class="space-y-3"></ul>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-gray-800 dark:text-white truncate" id="dropdownUserName">Zidane
+                    Solahudin</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate" id="dropdownUserEmail">zidane@example.com
+                  </p>
+                </div>
               </div>
             </div>
 
-            
+            <!-- Menu items dengan efek slider -->
+            <div class="py-1">
+              <button onclick="window.profileManager.showProfile()"
+                class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
+                <i
+                  class="fa-regular fa-user w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
+                <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Profile</span>
+              </button>
+              <button onclick="window.profileManager.showSettings()"
+                class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-3 group/profile">
+                <i
+                  class="fa-solid fa-sliders-h w-4 text-gray-400 group-hover/profile:text-primary transition-all duration-200 group-hover/profile:translate-x-0.5"></i>
+                <span class="group-hover/profile:translate-x-0.5 transition-all duration-200">Pengaturan</span>
+              </button>
+            </div>
 
-            <div
-              class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
-            >
+            <!-- Divider + Logout -->
+            <div class="border-t border-gray-100 dark:border-gray-800 py-1">
+              <button onclick="window.auth.logout()"
+                class="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 flex items-center gap-3 group/logout">
+                <i
+                  class="fa-solid fa-right-from-bracket w-4 text-red-500 transition-all duration-200 group-hover/logout:translate-x-0.5"></i>
+                <span class="transition-all duration-200 group-hover/logout:translate-x-0.5">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto p-6 scroll-smooth" id="content-area">
+        <!-- DASHBOARD TAB -->
+        <section id="dashboard" class="tab-content block animate-fade-in">
+          <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 mb-6">
+            <div>
+              <p id="dateDisplay" class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Memuat tanggal...
+              </p>
+              <h2 id="welcomeText" class="text-2xl font-bold">
+                Welcome Back!
+              </h2>
+            </div>
+            <div id="weatherDisplay" class="text-right">
+              <span class="animate-pulse text-xs text-gray-400">Memeriksa cuaca...</span>
+            </div>
+          </div>
+
+          <div id="routineWidget" class="mb-8"></div>
+          <div id="studyWidget" class="mb-8"></div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="text-sm text-gray-500">Tugas Nunggak</p>
+                  <h3 class="text-3xl font-bold text-red-500" id="stat-pending-tasks">
+                    0
+                  </h3>
+                </div>
+                <div class="p-4 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-xl">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+              </div>
+            </div>
+            <div class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="text-sm text-gray-500">Total Notes</p>
+                  <h3 class="text-3xl font-bold text-primary" id="stat-total-notes">
+                    0
+                  </h3>
+                </div>
+                <div class="p-4 bg-indigo-100 dark:bg-indigo-900/30 text-primary rounded-xl">
+                  <i class="fa-solid fa-book"></i>
+                </div>
+              </div>
+            </div>
+            <div class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="text-sm text-gray-500">Tugas Selesai</p>
+                  <h3 class="text-3xl font-bold text-green-500" id="stat-done-tasks">
+                    0
+                  </h3>
+                </div>
+                <div class="p-4 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-xl">
+                  <i class="fa-solid fa-check-double"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800">
               <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-  <i class="fa-brands fa-github text-primary"></i> 
-  <span class="text-gradient">Activity Heatmap (Last 30 Days)</span>
-</h3>
-              <div id="heatmapGrid" class="flex flex-wrap gap-1.5"></div>
-              <div class="text-xs text-gray-500 flex items-center gap-2 mt-3">
-                <span>Less</span>
-                <div
-                  class="w-3 h-3 bg-gray-200 dark:bg-gray-700 rounded-sm"
-                ></div>
-                <div
-                  class="w-3 h-3 bg-indigo-300 dark:bg-indigo-900/60 rounded-sm"
-                ></div>
-                <div
-                  class="w-3 h-3 bg-indigo-400 dark:bg-indigo-700 rounded-sm"
-                ></div>
-                <div
-                  class="w-3 h-3 bg-indigo-600 dark:bg-indigo-500 rounded-sm"
-                ></div>
-                <span>More</span>
+                <i class="fa-solid fa-chart-pie text-primary"></i>
+                <span class="text-gradient">Task Progress</span>
+              </h3>
+              <div class="relative w-full max-w-[280px] md:max-w-[220px] lg:max-w-[200px] mx-auto aspect-square">
+                <div id="taskChart"></div>
               </div>
             </div>
-          </section>
+            <div class="lg:col-span-2 glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800">
+              <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-fire text-orange-500"></i>
+                <span class="text-gradient">Up Next / Deadline Mepet</span>
+              </h3>
+              <ul id="upNextList" class="space-y-3"></ul>
+            </div>
+          </div>
 
-          
-<!-- ROUTINES TAB -->
-<!-- ROUTINES TAB -->
-<section id="routines" class="tab-content hidden animate-fade-in">
-  <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
-  <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Daily Routine</span>📋</h2>
-  <button onclick="window.routineManager.openAddModal()" 
-    class="btn-primary glow px-4 py-2 rounded-lg text-white transition flex items-center justify-center gap-2 w-full sm:w-auto">
-    <i class="fa-solid fa-plus"></i> Tambah Rutinitas
-  </button>
-</div>
-  <div id="routinesContainer"></div>
-</section>
 
-          <!-- TASKS TAB -->
-          <section id="tasks" class="tab-content hidden animate-fade-in">
-            <h2 class="text-2xl font-bold mb-6"><span class="text-gradient px-2">Task Tracker</span>📝</h2>
-            <div
-              class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800"
-            >
-              <form id="taskForm" class="flex flex-col md:flex-row gap-4 mb-6">
-                <input
-                  type="text"
-                  id="taskInput"
-                  placeholder="Tugas apa nih?"
-                  required
-                  class="flex-1 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <input
-                  type="date"
-                  id="taskDeadline"
-                  required
-                  class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <select
-                  id="taskPriority"
-                  class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                >
-                  <option value="high">🔴 High Priority</option>
-                  <option value="medium" selected>🟡 Medium Priority</option>
-                  <option value="low">🟢 Low Priority</option>
-                </select>
-                <button
-                  type="submit"
-                  class="bg-primary hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition"
-                >
-                  <i class="fa-solid fa-plus"></i> Add
+
+          <div class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800">
+            <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+              <i class="fa-brands fa-github text-primary"></i>
+              <span class="text-gradient">Activity Heatmap (Last 30 Days)</span>
+            </h3>
+            <div id="heatmapGrid" class="flex flex-wrap gap-1.5"></div>
+            <div class="text-xs text-gray-500 flex items-center gap-2 mt-3">
+              <span>Less</span>
+              <div class="w-3 h-3 bg-gray-200 dark:bg-gray-700 rounded-sm"></div>
+              <div class="w-3 h-3 bg-indigo-300 dark:bg-indigo-900/60 rounded-sm"></div>
+              <div class="w-3 h-3 bg-indigo-400 dark:bg-indigo-700 rounded-sm"></div>
+              <div class="w-3 h-3 bg-indigo-600 dark:bg-indigo-500 rounded-sm"></div>
+              <span>More</span>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ROUTINES TAB -->
+        <!-- ROUTINES TAB -->
+        <section id="routines" class="tab-content hidden animate-fade-in">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
+            <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Daily Routine</span>📋</h2>
+            <button onclick="window.routineManager.openAddModal()"
+              class="btn-primary glow px-4 py-2 rounded-lg text-white transition flex items-center justify-center gap-2 w-full sm:w-auto">
+              <i class="fa-solid fa-plus"></i> Tambah Rutinitas
+            </button>
+          </div>
+          <div id="routinesContainer"></div>
+        </section>
+
+        <!-- TASKS TAB -->
+        <section id="tasks" class="tab-content hidden animate-fade-in">
+          <h2 class="text-2xl font-bold mb-6"><span class="text-gradient px-2">Task Tracker</span>📝</h2>
+          <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+            <form id="taskForm" class="flex flex-col md:flex-row gap-4 mb-6">
+              <input type="text" id="taskInput" placeholder="Tugas apa nih?" required
+                class="flex-1 px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+              <input type="date" id="taskDeadline" required
+                class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+              <select id="taskPriority"
+                class="px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="high">🔴 High Priority</option>
+                <option value="medium" selected>🟡 Medium Priority</option>
+                <option value="low">🟢 Low Priority</option>
+              </select>
+              <button type="submit" class="bg-primary hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition">
+                <i class="fa-solid fa-plus"></i> Add
+              </button>
+            </form>
+            <div class="flex gap-4 mb-4 text-sm">
+              <button id="filterAll" class="text-primary font-semibold" onclick="window.taskManager.setFilter('all')">
+                Semua
+              </button>
+              <button id="filterPending" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                onclick="window.taskManager.setFilter('pending')">
+                Belum
+              </button>
+              <button id="filterDone" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                onclick="window.taskManager.setFilter('done')">
+                Selesai
+              </button>
+            </div>
+            <ul id="taskList" class="space-y-3"></ul>
+          </div>
+        </section>
+
+        <!-- NOTES TAB -->
+        <section id="notes" class="tab-content hidden animate-fade-in">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
+            <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Notes Kuliah</span>📚</h2>
+            <button onclick="window.noteManager.openModal()"
+              class="btn-primary glow px-4 py-2 rounded-lg text-white transition flex items-center justify-center gap-2 w-full sm:w-auto">
+              <i class="fa-solid fa-plus"></i> Buat Note
+            </button>
+          </div>
+          <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- CHAT TAB -->
+        <section id="chat" class="tab-content hidden h-full flex flex-col animate-fade-in">
+          <div
+            class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-[calc(100vh-140px)]">
+            <div class="p-4 border-b dark:border-gray-800 flex justify-between items-center">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white">
+                  <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                  <h2 class="font-bold text-gradient">AI Assistant</h2>
+                  <span class="text-[10px] text-green-500 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                    Online
+                  </span>
+                </div>
+              </div>
+              <button onclick="window.chatManager.clearHistory()"
+                class="text-gray-400 hover:text-red-500 p-2 rounded-lg transition" title="Bersihkan History Chat">
+                <i class="fa-solid fa-broom"></i>
+              </button>
+            </div>
+            <div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+            <div class="p-3 border-t dark:border-gray-800 bg-gray-50 dark:bg-darkCard rounded-b-2xl">
+              <div id="imagePreviewContainer" class="hidden mb-2 relative inline-block">
+                <img id="imagePreview" class="h-10 rounded-md hidden" />
+                <button id="removeImageBtn"
+                  class="hidden absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs">
+                  ✕
+                </button>
+              </div>
+              <form id="chatForm" class="flex gap-2 items-center">
+                <input type="file" id="fileInput" accept="image/*,application/pdf,text/plain" class="hidden" />
+                <label for="fileInput"
+                  class="w-9 h-9 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center cursor-pointer shadow-sm border border-gray-200 dark:border-gray-700 hover:text-primary transition">
+                  <i class="fa-solid fa-paperclip text-gray-500 text-sm"></i>
+                </label>
+                <input type="text" id="chatInput" placeholder="Tanya AI..."
+                  class="flex-1 px-4 py-2 bg-white dark:bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-primary border border-gray-200 dark:border-gray-700 text-sm"
+                  required />
+                <button type="submit"
+                  class="btn-primary glow w-9 h-9 rounded-full hover:bg-indigo-600 transition flex items-center justify-center">
+                  <i class="fa-solid fa-paper-plane text-sm"></i>
                 </button>
               </form>
-              <div class="flex gap-4 mb-4 text-sm">
-  <button
-    id="filterAll"
-    class="text-primary font-semibold"
-    onclick="window.taskManager.setFilter('all')"
-  >
-    Semua
-  </button>
-  <button
-    id="filterPending"
-    class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-    onclick="window.taskManager.setFilter('pending')"
-  >
-    Belum
-  </button>
-  <button
-    id="filterDone"
-    class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-    onclick="window.taskManager.setFilter('done')"
-  >
-    Selesai
-  </button>
-</div>
-              <ul id="taskList" class="space-y-3"></ul>
             </div>
-          </section>
-
-<!-- NOTES TAB -->
-<section id="notes" class="tab-content hidden animate-fade-in">
-  <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
-  <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Notes Kuliah</span>📚</h2>
-  <button onclick="window.routineManager.openAddModal()" 
-    class="btn-primary glow px-4 py-2 rounded-lg text-white transition flex items-center justify-center gap-2 w-full sm:w-auto">
-    <i class="fa-solid fa-plus"></i> Buat Note
-  </button>
-</div>
-  <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-</section>
-
-          <!-- CHAT TAB -->
-          <section
-            id="chat"
-            class="tab-content hidden h-full flex flex-col animate-fade-in"
-          >
-            <div
-              class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-[calc(100vh-140px)]"
-            >
-              <div
-                class="p-4 border-b dark:border-gray-800 flex justify-between items-center"
-              >
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white"
-                  >
-                    <i class="fa-solid fa-robot"></i>
-                  </div>
-                  <div>
-                    <h2 class="font-bold text-gradient">AI Assistant</h2>
-                    <span
-                      class="text-[10px] text-green-500 flex items-center gap-1"
-                    >
-                      <span
-                        class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"
-                      ></span>
-                      Online
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onclick="window.chatManager.clearHistory()"
-                  class="text-gray-400 hover:text-red-500 p-2 rounded-lg transition"
-                  title="Bersihkan History Chat"
-                >
-                  <i class="fa-solid fa-broom"></i>
-                </button>
-              </div>
-              <div
-                id="chatBox"
-                class="flex-1 overflow-y-auto p-4 space-y-4"
-              ></div>
-              <div
-                class="p-3 border-t dark:border-gray-800 bg-gray-50 dark:bg-darkCard rounded-b-2xl"
-              >
-                <div
-                  id="imagePreviewContainer"
-                  class="hidden mb-2 relative inline-block"
-                >
-                  <img id="imagePreview" class="h-10 rounded-md hidden" />
-                  <button
-                    id="removeImageBtn"
-                    class="hidden absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <form id="chatForm" class="flex gap-2 items-center">
-                  <input
-                    type="file"
-                    id="fileInput"
-                    accept="image/*,application/pdf,text/plain"
-                    class="hidden"
-                  />
-                  <label
-                    for="fileInput"
-                    class="w-9 h-9 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center cursor-pointer shadow-sm border border-gray-200 dark:border-gray-700 hover:text-primary transition"
-                  >
-                    <i class="fa-solid fa-paperclip text-gray-500 text-sm"></i>
-                  </label>
-                  <input
-                    type="text"
-                    id="chatInput"
-                    placeholder="Tanya AI..."
-                    class="flex-1 px-4 py-2 bg-white dark:bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-primary border border-gray-200 dark:border-gray-700 text-sm"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    class="btn-primary glow w-9 h-9 rounded-full hover:bg-indigo-600 transition flex items-center justify-center"
-                  >
-                    <i class="fa-solid fa-paper-plane text-sm"></i>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </section>
-
-          <!-- TOOLS TAB -->
-          <section id="tools" class="tab-content hidden animate-fade-in">
-            <h2 class="text-2xl font-bold mb-6"><span class="text-gradient px-2">Quick Tools</span>🛠️</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <!-- Pomodoro Timer Card -->
-              <div
-                class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6"
-              >
-                <div class="text-center">
-                  <h3 class="font-bold text-xl mb-1">🍅 Pomodoro Timer</h3>
-                  <p class="text-gray-500 text-sm mb-5">
-                    Fokus 25 menit, istirahat 5 menit
-                  </p>
-                  <div
-                    class="text-6xl font-bold mb-6 font-mono text-primary tracking-wider"
-                    id="pomodoroDisplay"
-                  >
-                    25:00
-                  </div>
-                  <div class="flex justify-center gap-3 mb-6">
-                    <button
-                      id="pomodoroStart"
-                      class="bg-primary hover:bg-indigo-600 text-white px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2"
-                    >
-                      <i class="fa-solid fa-play text-sm"></i> Start
-                    </button>
-                    <button
-                      id="pomodoroReset"
-                      class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2"
-                    >
-                      <i class="fa-solid fa-rotate-right text-sm"></i> Reset
-                    </button>
-                    <button
-                      id="stopAlarmBtn"
-                      class="hidden bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl transition font-medium flex items-center gap-2"
-                    >
-                      <i class="fa-solid fa-bell-slash text-sm"></i> Stop
-                    </button>
-                  </div>
-                </div>
-                <div
-                  class="border-t border-gray-200 dark:border-gray-700 pt-5 mt-1"
-                >
-                  <p
-                    class="text-xs font-bold text-primary uppercase tracking-widest mb-3 text-center"
-                  >
-                    <i class="fa-solid fa-music mr-1"></i> Study Music
-                  </p>
-                  <div
-                    class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2 mb-4"
-                  >
-                    <button
-                      onclick="window.music.play('lofi')"
-                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
-                    >
-                      <i class="fa-solid fa-headphones"></i> Lo-Fi
-                    </button>
-                    <button
-                      onclick="window.music.play('classical')"
-                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
-                    >
-                      <i class="fa-solid fa-music"></i> Classical
-                    </button>
-                    <button
-                      onclick="window.music.play('ambient')"
-                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
-                    >
-                      <i class="fa-solid fa-cloud-moon"></i> Ambient
-                    </button>
-                    <button
-                      onclick="window.music.play('nature')"
-                      class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5"
-                    >
-                      <i class="fa-solid fa-tree"></i> Nature
-                    </button>
-                  </div>
-                  <div class="bg-gray-100 dark:bg-gray-800/50 rounded-xl p-3">
-                    <div class="flex items-center justify-between gap-2">
-                      <div class="flex items-center gap-2 flex-1 min-w-0">
-                        <div
-                          class="w-8 h-8 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center flex-shrink-0"
-                        >
-                          <i
-                            id="musicIcon"
-                            class="fa-solid fa-headphones text-primary text-sm"
-                          ></i>
-                        </div>
-                        <span
-                          id="currentMusicLabel"
-                          class="text-xs text-gray-600 dark:text-gray-400 truncate"
-                          >Belum ada musik diputar</span
-                        >
-                      </div>
-                      <div class="flex gap-1 flex-shrink-0">
-                        <button
-                          id="musicPlayPauseBtn"
-                          onclick="window.music.togglePlayPause()"
-                          class="hidden w-8 h-8 rounded-full btn-primary glow hover:bg-indigo-600 transition items-center justify-center"
-                        >
-                          <i class="fa-solid fa-play text-xs"></i>
-                        </button>
-                        <button
-                          id="musicStopBtn"
-                          onclick="window.music.stop()"
-                          class="hidden w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition items-center justify-center"
-                        >
-                          <i class="fa-solid fa-stop text-xs"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div id="volumeControl" class="hidden mt-2">
-                      <input
-                        type="range"
-                        id="volumeSlider"
-                        min="0"
-                        max="100"
-                        value="50"
-                        class="w-full h-1 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Word of the Day Card -->
-              <div
-                class="glass-card
-                p-6 rounded-2xl border-gray-100 dark:border-gray-800 text-center flex flex-col justify-center"
-              >
-                <div
-                  class="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md"
-                >
-                  <i class="fa-solid fa-language text-white text-xl"></i>
-                </div>
-                <p
-                  class="text-xs font-bold text-primary uppercase tracking-widest mb-2"
-                >
-                  📖 Word of the Day
-                </p>
-                <h3
-                  id="jpKanji"
-                  class="text-4xl font-bold mb-2 text-gray-800 dark:text-white"
-                >
-                  勉強
-                </h3>
-                <p
-                  id="jpRomaji"
-                  class="text-sm text-gray-500 dark:text-gray-400 mb-4"
-                >
-                  (Benkyou) - Belajar
-                </p>
-                <div
-                  class="h-px w-12 bg-primary mx-auto rounded-full mb-4"
-                ></div>
-                <p class="text-xs italic text-gray-400 mb-4">
-                  "Semangat nugasnya,"
-                </p>
-                <div
-                  class="mt-2 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-center gap-6"
-                >
-                  <div class="text-center">
-                    <p class="text-xl font-bold text-primary" id="streakCount">
-                      0
-                    </p>
-                    <p class="text-[10px] text-gray-400 mt-0.5">Streak</p>
-                  </div>
-                  <div class="text-center">
-                    <p
-                      class="text-xl font-bold text-green-500"
-                      id="todayTasksDone"
-                    >
-                      0
-                    </p>
-                    <p class="text-[10px] text-gray-400 mt-0.5">
-                      Selesai Hari Ini
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div id="weeklyFocusChart"></div>
-            </div>
-          </section>
-
-          <section id="settings" class="tab-content hidden animate-fade-in">
-  <div class="mb-6">
-    <h2 class="text-2xl font-bold tracking-tight">⚙️<span class="text-gradient pl-2">Pengaturan</span></h2>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Atur preferensi aplikasi dan akun Anda</p>
-  </div>
-  <div id="settingsContainer"></div>
-</section>
-        </div>
-      </main>
-
-      <!-- MODALS -->
-      <div id="noteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[100] p-4">
-  <div class="bg-white dark:bg-darkCard w-full max-w-lg rounded-2xl p-5 md:p-8 shadow-2xl animate-fade-in-up">
-    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-      <i class="fa-solid fa-pen-to-square text-primary"></i> Buat Catatan
-    </h3>
-    <form id="noteForm" class="space-y-4">
-      <input type="hidden" id="noteId" />
-      <input type="text" id="noteTitle" placeholder="Judul Materi..." 
-        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition-all" required />
-      
-      <input type="text" id="noteTag" placeholder="Tag (misal: Basis Data)"
-        class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700 text-sm outline-none" />
-      
-      <textarea id="noteContent" rows="6" placeholder="Isi catatan lo di sini..."
-        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none resize-none" required></textarea>
-      
-      <div class="flex gap-3 pt-2">
-        <button type="button" onclick="window.noteManager.closeModal()" 
-          class="flex-1 px-4 py-3 text-gray-500 bg-gray-100 dark:bg-gray-800 dark:text-gray-400 rounded-xl hover:bg-gray-200 transition font-medium">
-          Batal
-        </button>
-        <button type="submit" class="flex-1 btn-primary glow px-4 py-3 rounded-xl font-bold">
-          Simpan
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-      <!-- ROUTINE MODAL (Baru dengan Hari, Jam Mulai-Selesai) -->
-      <div
-        id="routineModal"
-        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[70]"
-      >
-        <div
-          class="bg-white dark:bg-darkCard w-full max-w-md rounded-2xl p-6 shadow-2xl"
-        >
-          <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-calendar-plus text-primary"></i> Tambah
-            Rutinitas
-          </h3>
-          <form id="routineForm">
-            <!-- Hari -->
-            <div class="mb-4">
-              <label class="block text-sm font-medium mb-2"
-                >Hari <span class="text-red-500">*</span></label
-              >
-              <div class="grid grid-cols-7 gap-2">
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="senin"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Sen</span>
-                </label>
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="selasa"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Sel</span>
-                </label>
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="rabu"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Rab</span>
-                </label>
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="kamis"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Kam</span>
-                </label>
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="jumat"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Jum</span>
-                </label>
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="sabtu"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Sab</span>
-                </label>
-                <label
-                  class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    name="day"
-                    value="minggu"
-                    class="day-checkbox hidden"
-                  />
-                  <span class="text-xs font-medium">Min</span>
-                </label>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-2">
-                Kosongkan jika rutin setiap hari
-              </p>
-            </div>
-
-            <!-- Icon -->
-            <div class="mb-4">
-              <label class="block text-sm font-medium mb-1">Icon</label>
-              <div class="flex gap-2 flex-wrap mb-2">
-                <button
-                  type="button"
-                  data-icon="🏃"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  🏃
-                </button>
-                <button
-                  type="button"
-                  data-icon="📖"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  📖
-                </button>
-                <button
-                  type="button"
-                  data-icon="💧"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  💧
-                </button>
-                <button
-                  type="button"
-                  data-icon="🍽️"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  🍽️
-                </button>
-                <button
-                  type="button"
-                  data-icon="💤"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  💤
-                </button>
-                <button
-                  type="button"
-                  data-icon="📝"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  📝
-                </button>
-                <button
-                  type="button"
-                  data-icon="🧘"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  🧘
-                </button>
-                <button
-                  type="button"
-                  data-icon="📱"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  📱
-                </button>
-                <button
-                  type="button"
-                  data-icon="💪"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  💪
-                </button>
-                <button
-                  type="button"
-                  data-icon="🎯"
-                  class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl"
-                >
-                  🎯
-                </button>
-              </div>
-              <input
-                type="text"
-                id="routineIcon"
-                placeholder="Atau ketik icon manual (emoji)"
-                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                maxlength="2"
-              />
-            </div>
-
-            <!-- Nama Rutinitas -->
-            <div class="mb-4">
-              <label class="block text-sm font-medium mb-1"
-                >Nama Rutinitas <span class="text-red-500">*</span></label
-              >
-              <input
-                type="text"
-                id="routineTitle"
-                placeholder="Contoh: Olahraga pagi"
-                required
-                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-
-            <!-- Waktu Mulai - Selesai -->
-            <div class="grid grid-cols-2 gap-3 mb-4">
-              <div>
-                <label class="block text-sm font-medium mb-1">Jam Mulai</label>
-                <input
-                  type="time"
-                  id="routineStartTime"
-                  value="07:00"
-                  class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium mb-1"
-                  >Jam Selesai</label
-                >
-                <input
-                  type="time"
-                  id="routineEndTime"
-                  value="08:00"
-                  class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            </div>
-
-            <div class="flex gap-3 mt-6">
-              <button
-                type="button"
-                onclick="window.routineManager.closeModal()"
-                class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 transition"
-              >
-                Batal
-              </button>
-              <button
-                type="submit"
-                class="flex-1 px-4 py-2 btn-primary glow rounded-lg hover:bg-indigo-600 transition"
-              >
-                Tambah
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div
-        id="confirmModal"
-        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[60]"
-      >
-        <div
-          class="bg-white dark:bg-darkCard w-full max-w-xs rounded-2xl p-6 text-center"
-        >
-          <div
-            class="w-14 h-14 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"
-          >
-            <i class="fa-solid fa-trash-can"></i>
           </div>
-          <h3 class="text-xl font-bold mb-2">Yakin mau hapus?</h3>
-          <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
-            Data yang udah dihapus nggak bisa balik lagi!
-          </p>
-          <div class="flex gap-3">
-            <button
-              onclick="window.confirmModal.close()"
-              class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition font-semibold"
-            >
+        </section>
+
+        <!-- TOOLS TAB -->
+        <section id="tools" class="tab-content hidden animate-fade-in">
+          <h2 class="text-2xl font-bold mb-6"><span class="text-gradient px-2">Quick Tools</span>🛠️</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Pomodoro Timer Card -->
+            <div
+              class="bg-white dark:bg-darkCard rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+              <div class="text-center">
+                <h3 class="font-bold text-xl mb-1">🍅 Pomodoro Timer</h3>
+                <p class="text-gray-500 text-sm mb-5">
+                  Fokus 25 menit, istirahat 5 menit
+                </p>
+                <div class="text-6xl font-bold mb-6 font-mono text-primary tracking-wider" id="pomodoroDisplay">
+                  25:00
+                </div>
+                <div class="flex justify-center gap-3 mb-6">
+                  <button id="pomodoroStart"
+                    class="bg-primary hover:bg-indigo-600 text-white px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-play text-sm"></i> Start
+                  </button>
+                  <button id="pomodoroReset"
+                    class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-6 py-2.5 rounded-xl transition font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right text-sm"></i> Reset
+                  </button>
+                  <button id="stopAlarmBtn"
+                    class="hidden bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl transition font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-bell-slash text-sm"></i> Stop
+                  </button>
+                </div>
+              </div>
+              <div class="border-t border-gray-200 dark:border-gray-700 pt-5 mt-1">
+                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3 text-center">
+                  <i class="fa-solid fa-music mr-1"></i> Study Music
+                </p>
+                <div class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2 mb-4">
+                  <button onclick="window.music.play('lofi')"
+                    class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-headphones"></i> Lo-Fi
+                  </button>
+                  <button onclick="window.music.play('classical')"
+                    class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-music"></i> Classical
+                  </button>
+                  <button onclick="window.music.play('ambient')"
+                    class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-cloud-moon"></i> Ambient
+                  </button>
+                  <button onclick="window.music.play('nature')"
+                    class="music-btn px-3 py-2 rounded-xl text-xs sm:text-sm bg-indigo-50 dark:bg-indigo-900/30 text-primary hover:bg-indigo-100 dark:hover:bg-indigo-800/50 transition font-medium flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-tree"></i> Nature
+                  </button>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800/50 rounded-xl p-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 flex-1 min-w-0">
+                      <div
+                        class="w-8 h-8 rounded-full bg-primary/20 dark:bg-primary/30 flex items-center justify-center flex-shrink-0">
+                        <i id="musicIcon" class="fa-solid fa-headphones text-primary text-sm"></i>
+                      </div>
+                      <span id="currentMusicLabel" class="text-xs text-gray-600 dark:text-gray-400 truncate">Belum ada
+                        musik diputar</span>
+                    </div>
+                    <div class="flex gap-1 flex-shrink-0">
+                      <button id="musicPlayPauseBtn" onclick="window.music.togglePlayPause()"
+                        class="hidden w-8 h-8 rounded-full btn-primary glow hover:bg-indigo-600 transition items-center justify-center">
+                        <i class="fa-solid fa-play text-xs"></i>
+                      </button>
+                      <button id="musicStopBtn" onclick="window.music.stop()"
+                        class="hidden w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition items-center justify-center">
+                        <i class="fa-solid fa-stop text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div id="volumeControl" class="hidden mt-2">
+                    <input type="range" id="volumeSlider" min="0" max="100" value="50"
+                      class="w-full h-1 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Word of the Day Card -->
+            <div class="glass-card
+                p-6 rounded-2xl border-gray-100 dark:border-gray-800 text-center flex flex-col justify-center">
+              <div
+                class="w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
+                <i class="fa-solid fa-language text-white text-xl"></i>
+              </div>
+              <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">
+                📖 Word of the Day
+              </p>
+              <h3 id="jpKanji" class="text-4xl font-bold mb-2 text-gray-800 dark:text-white">
+                勉強
+              </h3>
+              <p id="jpRomaji" class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                (Benkyou) - Belajar
+              </p>
+              <div class="h-px w-12 bg-primary mx-auto rounded-full mb-4"></div>
+              <p class="text-xs italic text-gray-400 mb-4">
+                "Semangat nugasnya,"
+              </p>
+              <div class="mt-2 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-center gap-6">
+                <div class="text-center">
+                  <p class="text-xl font-bold text-primary" id="streakCount">
+                    0
+                  </p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">Streak</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-xl font-bold text-green-500" id="todayTasksDone">
+                    0
+                  </p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">
+                    Selesai Hari Ini
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div id="weeklyFocusChart"></div>
+          </div>
+        </section>
+
+        <section id="settings" class="tab-content hidden animate-fade-in">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold tracking-tight">⚙️<span class="text-gradient pl-2">Pengaturan</span></h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Atur preferensi aplikasi dan akun Anda</p>
+          </div>
+          <div id="settingsContainer"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- MODALS -->
+    <div id="noteModal"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[100] p-4">
+      <div class="bg-white dark:bg-darkCard w-full max-w-lg rounded-2xl p-5 md:p-8 shadow-2xl animate-fade-in-up">
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-primary"></i> Buat Catatan
+        </h3>
+        <form id="noteForm" class="space-y-4">
+          <input type="hidden" id="noteId" />
+          <input type="text" id="noteTitle" placeholder="Judul Materi..."
+            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none transition-all"
+            required />
+
+          <input type="text" id="noteTag" placeholder="Tag (misal: Basis Data)"
+            class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700 text-sm outline-none" />
+
+          <textarea id="noteContent" rows="6" placeholder="Isi catatan lo di sini..."
+            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 focus:ring-2 focus:ring-primary outline-none resize-none"
+            required></textarea>
+
+          <div class="flex gap-3 pt-2">
+            <button type="button" onclick="window.noteManager.closeModal()"
+              class="flex-1 px-4 py-3 text-gray-500 bg-gray-100 dark:bg-gray-800 dark:text-gray-400 rounded-xl hover:bg-gray-200 transition font-medium">
               Batal
             </button>
-            <button
-              id="confirmDeleteBtn"
-              class="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition font-semibold"
-            >
-              Hapus!
+            <button type="submit" class="flex-1 btn-primary glow px-4 py-3 rounded-xl font-bold">
+              Simpan
             </button>
           </div>
-        </div>
+        </form>
       </div>
-
-      <div
-        id="toastContainer"
-        class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"
-      ></div>
     </div>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <!-- ROUTINE MODAL (Baru dengan Hari, Jam Mulai-Selesai) -->
+    <div id="routineModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[70]">
+      <div class="bg-white dark:bg-darkCard w-full max-w-md rounded-2xl p-6 shadow-2xl">
+        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-calendar-plus text-primary"></i> Tambah
+          Rutinitas
+        </h3>
+        <form id="routineForm">
+          <!-- Hari -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">Hari <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-7 gap-2">
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="senin" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Sen</span>
+              </label>
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="selasa" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Sel</span>
+              </label>
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="rabu" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Rab</span>
+              </label>
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="kamis" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Kam</span>
+              </label>
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="jumat" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Jum</span>
+              </label>
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="sabtu" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Sab</span>
+              </label>
+              <label
+                class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                <input type="checkbox" name="day" value="minggu" class="day-checkbox hidden" />
+                <span class="text-xs font-medium">Min</span>
+              </label>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2">
+              Kosongkan jika rutin setiap hari
+            </p>
+          </div>
+
+          <!-- Icon -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Icon</label>
+            <div class="flex gap-2 flex-wrap mb-2">
+              <button type="button" data-icon="🏃" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                🏃
+              </button>
+              <button type="button" data-icon="📖" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                📖
+              </button>
+              <button type="button" data-icon="💧" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                💧
+              </button>
+              <button type="button" data-icon="🍽️" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                🍽️
+              </button>
+              <button type="button" data-icon="💤" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                💤
+              </button>
+              <button type="button" data-icon="📝" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                📝
+              </button>
+              <button type="button" data-icon="🧘" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                🧘
+              </button>
+              <button type="button" data-icon="📱" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                📱
+              </button>
+              <button type="button" data-icon="💪" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                💪
+              </button>
+              <button type="button" data-icon="🎯" class="icon-option p-2 rounded-lg border hover:bg-gray-100 text-xl">
+                🎯
+              </button>
+            </div>
+            <input type="text" id="routineIcon" placeholder="Atau ketik icon manual (emoji)"
+              class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              maxlength="2" />
+          </div>
+
+          <!-- Nama Rutinitas -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Nama Rutinitas <span class="text-red-500">*</span></label>
+            <input type="text" id="routineTitle" placeholder="Contoh: Olahraga pagi" required
+              class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
+
+          <!-- Waktu Mulai - Selesai -->
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Jam Mulai</label>
+              <input type="time" id="routineStartTime" value="07:00"
+                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Jam Selesai</label>
+              <input type="time" id="routineEndTime" value="08:00"
+                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+            </div>
+          </div>
+
+          <div class="flex gap-3 mt-6">
+            <button type="button" onclick="window.routineManager.closeModal()"
+              class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 transition">
+              Batal
+            </button>
+            <button type="submit" class="flex-1 px-4 py-2 btn-primary glow rounded-lg hover:bg-indigo-600 transition">
+              Tambah
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="confirmModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-[60]">
+      <div class="bg-white dark:bg-darkCard w-full max-w-xs rounded-2xl p-6 text-center">
+        <div
+          class="w-14 h-14 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Yakin mau hapus?</h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">
+          Data yang udah dihapus nggak bisa balik lagi!
+        </p>
+        <div class="flex gap-3">
+          <button onclick="window.confirmModal.close()"
+            class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition font-semibold">
+            Batal
+          </button>
+          <button id="confirmDeleteBtn"
+            class="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition font-semibold">
+            Hapus!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
