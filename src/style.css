@@ -612,3 +612,127 @@ input[type="checkbox"], input[type="radio"],
 #heatmap-tooltip {
   animation: fadeIn 0.15s ease-out;
 }
+
+/* Animasi untuk deadline item */
+#upNextList li {
+  transition: all 0.2s ease;
+}
+
+#upNextList li:hover {
+  transform: translateX(4px);
+}
+
+/* Efek pulse untuk badge "Sekarang" */
+@keyframes softPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulse {
+  animation: softPulse 1.5s ease-in-out infinite;
+}
+
+/* Hover effect untuk card */
+#upcomingRoutines .glass-card {
+  transition: all 0.25s ease;
+}
+
+#upcomingRoutines .glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+}
+
+@media (max-width: 640px) {
+  #heatmapGrid div {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Chart container responsive */
+#taskChart {
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+}
+
+@media (min-width: 640px) {
+  #taskChart {
+    min-height: 240px;
+  }
+}
+
+@media (min-width: 1024px) {
+  #taskChart {
+    min-height: 280px;
+  }
+}
+
+/* Chat bubble improvements */
+#chatBox {
+  scroll-behavior: smooth;
+}
+
+#chatBox::-webkit-scrollbar {
+  width: 4px;
+}
+
+#chatBox::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#chatBox::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dark #chatBox::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+/* File preview image */
+#imagePreview {
+  max-height: 48px;
+  border-radius: 8px;
+}
+
+/* Responsive chat input */
+@media (max-width: 640px) {
+  #chatInput {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  
+  .btn-primary.glow {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .flex-col.sm\\:flex-row {
+    gap: 0.75rem;
+  }
+}
+
+/* Pastikan tombol tidak kelebihan lebar */
+#routines .btn-primary,
+#notes .btn-primary {
+  min-width: unset;
+}
+
+@media (max-width: 640px) {
+  #routines > div > .btn-primary,
+  #notes > div > .btn-primary {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}

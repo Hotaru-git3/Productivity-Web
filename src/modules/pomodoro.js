@@ -24,11 +24,9 @@ export const Pomodoro = {
   },
 
   initAlarmSound() {
-    // 🔥 PRIORITAS: File lokal dulu
     alarmAudio = new Audio(ALARM_SOUND_URL);
     alarmAudio.preload = "auto";
     
-    // Kalau file lokal gagal, fallback ke online + beep
     alarmAudio.onerror = () => {
       console.warn("Local alarm sound not found, using online fallback");
       alarmAudio = new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3");
@@ -74,7 +72,7 @@ export const Pomodoro = {
       isRunning = true;
       endTime = Date.now() + (pomoTime * 1000);
 
-      pomoInterval = setInterval(() => {
+      pomoInterval = setInterval(async () => {
         if (!isRunning) return;
 
         const now = Date.now();
@@ -84,9 +82,59 @@ export const Pomodoro = {
           pomoTime = remaining;
           this.updateDisplay();
         } else {
+          // WAKTU HABIS
           pomoTime = 0;
           this.updateDisplay();
           this.resetTimerState();
+
+          // 🔥 LOG STUDY SESSION KE FIRESTORE
+          // Di bagian timer habis, ganti dengan kode ini:
+
+// 🔥 LOG STUDY SESSION (AGGREGATE PER HARI)
+try {
+  const { addDoc, collection, query, where, getDocs, updateDoc, doc } = await import("firebase/firestore");
+  const { db } = await import("../firebase");
+  const user = AppState.currentUser;
+  
+  if (user) {
+    const today = new Date().toISOString().split("T")[0];
+    
+    // Cek apakah sudah ada dokumen untuk hari ini
+    const q = query(
+      collection(db, "dailyFocus"),
+      where("userId", "==", user.uid),
+      where("date", "==", today)
+    );
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.empty) {
+      // Buat dokumen baru
+      await addDoc(collection(db, "dailyFocus"), {
+        userId: user.uid,
+        date: today,
+        totalMinutes: 25,
+        sessions: 1,
+        lastUpdated: Date.now()
+      });
+    } else {
+      // Update dokumen yang sudah ada
+      const existingDoc = snapshot.docs[0];
+      const currentMinutes = existingDoc.data().totalMinutes || 0;
+      const currentSessions = existingDoc.data().sessions || 0;
+      
+      await updateDoc(doc(db, "dailyFocus", existingDoc.id), {
+        totalMinutes: currentMinutes + 25,
+        sessions: currentSessions + 1,
+        lastUpdated: Date.now()
+      });
+    }
+    
+    console.log("✅ Daily focus updated!");
+    window.dispatchEvent(new CustomEvent("session-logged"));
+  }
+} catch (err) {
+  console.error("Failed to log session:", err);
+}
 
           showToast("⏰ Waktu fokus abis! Istirahat dulu sana.", "success");
           recordActivity(AppState.activityLog);
@@ -123,7 +171,6 @@ export const Pomodoro = {
     this.stopAlarm();
   },
 
-  // 🔥 UPGRADE: Play alarm dengan fallback yang lebih baik
   playAlarm() {
     this.showStopAlarmButton(true);
     
@@ -138,7 +185,6 @@ export const Pomodoro = {
     }
   },
 
-  // 🔥 Fallback beep menggunakan Web Audio API
   fallbackBeep() {
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -153,7 +199,6 @@ export const Pomodoro = {
       
       oscillator.start();
       
-      // Beep 3x dengan jeda
       let count = 0;
       const interval = setInterval(() => {
         if (count >= 2) {

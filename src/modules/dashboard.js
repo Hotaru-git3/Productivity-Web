@@ -21,37 +21,173 @@ export const Dashboard = {
     this.renderHeatmap();
     this.updateMiniStats();
     this.updateRoutineWidget();
+    this.renderUpcomingRoutines();
   },
+
+  // Di dalam object Dashboard, tambahkan method ini:
+
+renderUpcomingRoutines() {
+  const container = document.getElementById("upcomingRoutines");
+  if (!container) return;
+
+  const routines = AppState.routines || [];
+  const today = new Date().toISOString().split("T")[0];
+  const todayName = ["minggu", "senin", "selasa", "rabu", "kamis", "jumat", "sabtu"][new Date().getDay()];
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  // Filter rutinitas yang berlaku hari ini & belum selesai
+  let todayRoutines = routines.filter(r => {
+    const isToday = (!r.days || r.days.length === 0) || r.days.includes(todayName);
+    const isNotDone = !r.history?.[today];
+    return isToday && isNotDone;
+  });
+
+  // Parse waktu mulai ke menit untuk sorting
+  todayRoutines = todayRoutines.map(r => {
+    const [startHour, startMinute] = (r.startTime || "00:00").split(":").map(Number);
+    const startMinutes = startHour * 60 + startMinute;
+    const currentMinutes = currentHour * 60 + currentMinute;
+    const isNow = startMinutes <= currentMinutes && currentMinutes <= (startMinutes + 60); // dalam 1 jam setelah start
+    return { ...r, startMinutes, isNow };
+  });
+
+  // Urutkan: yang "Sekarang" duluan, lalu berdasarkan jam terdekat
+  todayRoutines.sort((a, b) => {
+    if (a.isNow && !b.isNow) return -1;
+    if (!a.isNow && b.isNow) return 1;
+    return a.startMinutes - b.startMinutes;
+  });
+
+  // Ambil maksimal 3 item
+  const upcoming = todayRoutines.slice(0, 3);
+
+  if (upcoming.length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-6 text-gray-400 text-sm">
+        ✨ Semua rutinitas hari ini sudah selesai! Istirahat dulu ya.
+      </div>
+    `;
+    return;
+  }
+
+  // Grid 2 kolom (desktop), 1 kolom (mobile)
+  container.innerHTML = `
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      ${upcoming.map(routine => {
+        const timeRange = `${routine.startTime || '??:??'} - ${routine.endTime || '??:??'}`;
+        const streak = routine.streak || 0;
+        const isNow = routine.isNow;
+        
+        return `
+          <div class="group glass-card card-animate p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all duration-300 hover:scale-[1.01]">
+            <div class="flex items-start gap-2">
+              <span class="text-2xl">${routine.icon || '📌'}</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <p class="font-medium text-sm truncate">${escapeHtml(routine.title)}</p>
+                  ${streak > 0 ? `
+                    <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-orange-500 bg-orange-100 dark:bg-orange-900/30 px-1.5 py-0.5 rounded-full">
+                      <i class="fa-solid fa-fire text-[9px]"></i> ${streak}
+                    </span>
+                  ` : ''}
+                  ${isNow ? `
+                    <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-green-600 bg-green-100 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full animate-pulse">
+                      <i class="fa-solid fa-clock"></i> Sekarang
+                    </span>
+                  ` : ''}
+                </div>
+                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                  <i class="fa-regular fa-clock"></i> ${timeRange}
+                </p>
+              </div>
+              <button onclick="window.app.switchTab('routines')" 
+                class="text-xs text-primary hover:underline whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                Kerjakan →
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+},
 
   renderUpNext(pendingTasks) {
-    const list = document.getElementById("upNextList");
-    if (!list) return;
+  const list = document.getElementById("upNextList");
+  if (!list) return;
 
-    const withDeadline = pendingTasks.filter(t => t.deadline).sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-    const top3 = withDeadline.slice(0, 3);
+  // Filter task yang punya deadline, urutkan dari terdekat
+  const withDeadline = pendingTasks
+    .filter(t => t.deadline)
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+    .slice(0, 5); // Maksimal 5 tugas
 
-    if (top3.length === 0) {
-      list.innerHTML = `<li class="text-sm text-gray-500 py-4 text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg">✅ Aman, nggak ada deadline mepet! Bawa kalem dulu aja.</li>`;
-      return;
+  if (withDeadline.length === 0) {
+    list.innerHTML = `
+      <li class="text-sm text-gray-500 py-4 text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+        ✅ Tidak ada deadline mendekat. Santai dulu!
+      </li>
+    `;
+    return;
+  }
+
+  list.innerHTML = withDeadline.map(t => {
+    const deadlineDate = new Date(t.deadline);
+    const today = new Date();
+    const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+    
+    let label = '';
+    let colorClass = '';
+    let bgClass = '';
+
+    if (daysLeft <= 0) {
+      label = '⚠️ TERLEWAT';
+      colorClass = 'text-red-700';
+      bgClass = 'bg-red-100 dark:bg-red-900/40';
+    } else if (daysLeft === 1) {
+      label = '🔴 BESOK!';
+      colorClass = 'text-red-600';
+      bgClass = 'bg-red-100 dark:bg-red-900/40';
+    } else if (daysLeft === 2) {
+      label = `🟠 ${daysLeft} hari lagi`;
+      colorClass = 'text-orange-600';
+      bgClass = 'bg-orange-100 dark:bg-orange-900/40';
+    } else if (daysLeft <= 5) {
+      label = `🟡 ${daysLeft} hari lagi`;
+      colorClass = 'text-yellow-700';
+      bgClass = 'bg-yellow-100 dark:bg-yellow-900/40';
+    } else {
+      label = `🟢 ${daysLeft} hari lagi`;
+      colorClass = 'text-green-600';
+      bgClass = 'bg-green-100 dark:bg-green-900/40';
     }
 
-    list.innerHTML = top3.map(t => {
-      const daysLeft = Math.ceil((new Date(t.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-      let alertClass = "text-green-600 bg-green-100 dark:bg-green-900/40";
-      let text = `${daysLeft} hari lagi`;
+    // Format deadline jadi lebih rapi
+    const formattedDate = deadlineDate.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
 
-      if (daysLeft <= 2 && daysLeft > 0) alertClass = "text-orange-500 bg-orange-100 dark:bg-orange-900/40";
-      else if (daysLeft === 0) { alertClass = "text-red-500 bg-red-100 dark:bg-red-900/40"; text = "Hari Ini!"; }
-      else if (daysLeft < 0) { alertClass = "text-gray-500 bg-gray-200 dark:bg-gray-700"; text = "Terlewat"; }
-
-      return `
-        <li class="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
-          <span class="font-medium text-sm truncate pr-4">${escapeHtml(t.title)}</span>
-          <span class="text-xs font-bold px-2 py-1 rounded-md whitespace-nowrap ${alertClass}">${text}</span>
-        </li>
-      `;
-    }).join("");
-  },
+    return `
+      <li class="flex justify-between items-center p-3 rounded-lg ${bgClass} border border-gray-100 dark:border-gray-700 transition-all hover:shadow-sm">
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-sm truncate">${escapeHtml(t.title)}</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            <i class="fa-regular fa-calendar mr-1"></i> ${formattedDate}
+          </p>
+        </div>
+        <div class="ml-3 flex-shrink-0">
+          <span class="text-xs font-bold px-2 py-1 rounded-md whitespace-nowrap ${colorClass} ${bgClass}">
+            ${label}
+          </span>
+        </div>
+      </li>
+    `;
+  }).join("");
+},
 
   renderChart(pending, done) {
   const container = document.getElementById("taskChart");
@@ -369,24 +505,62 @@ showHeatmapDetail(dateStr, count, targetBox) {
       return;
     }
 
-    container.innerHTML = `
-      <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="font-bold text-lg ">📋<span class="text-gradient pl-2">Today's Routine<span/></h3>
-          <span class="text-sm font-semibold text-primary">${completedToday}/${totalToday}</span>
+    // Ambil rutinitas yang belum selesai hari ini (maks 3)
+const upcoming = todayRoutines.filter(r => !r.history?.[today]).slice(0, 3);
+
+let upcomingHtml = '';
+if (upcoming.length > 0) {
+  upcomingHtml = `
+  <div class="${upcoming.length === 1 ? 'grid grid-cols-1' : 'grid grid-cols-1'} gap-3">
+    ${upcoming.map(r => `
+      <div class="rounded-xl p-3 transition cursor-pointer bg-indigo-50/60 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/40 hover:bg-indigo-100/60 dark:hover:bg-indigo-900/30"
+        onclick="window.app.switchTab('routines')">
+        <div class="flex items-start gap-2">
+          <span class="text-xl">${r.icon || '📌'}</span>
+          <div class="flex-1 min-w-0">
+            <p class="font-medium text-sm truncate text-indigo-900 dark:text-indigo-100">${r.title}</p>
+            <p class="text-xs text-indigo-400 dark:text-indigo-400 mt-0.5">
+              <i class="fa-regular fa-clock"></i> ${r.startTime || '??:??'} - ${r.endTime || '??:??'}
+            </p>
+            ${r.streak > 0 ? `<p class="text-xs text-orange-500 mt-0.5">🔥 ${r.streak} hari</p>` : ''}
+          </div>
         </div>
-        <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-          <div class="h-full bg-primary rounded-full transition-all" style="width: ${percent}%"></div>
-        </div>
-        <p class="text-xs text-gray-500 mt-3">
-          ${percent === 100 ? "🎉 All done! Great job!" : `${totalToday - completedToday} more to go!`}
-        </p>
-        <button onclick="window.app.switchTab('routines')" 
-          class="mt-3 w-full text-center text-xs text-primary hover:underline">
-          Lihat semua rutinitas →
-        </button>
       </div>
-    `;
+    `).join('')}
+  </div>
+`;
+} else if (percent < 100) {
+  upcomingHtml = '';
+} else {
+  upcomingHtml = '';
+}
+
+    container.innerHTML = `
+  <div class="bg-white dark:bg-darkCard p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+    <!-- Header + counter -->
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="font-bold text-lg">📋<span class="text-gradient pl-2">Today's Routine</span></h3>
+      <span class="text-sm font-semibold text-primary">${completedToday}/${totalToday}</span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div class="h-full bg-primary rounded-full transition-all" style="width: ${percent}%"></div>
+    </div>
+    <p class="text-xs text-gray-500 mt-2 mb-4">
+      ${percent === 100 ? "🎉 All done! Great job!" : `${totalToday - completedToday} more to go!`}
+    </p>
+
+    <!-- Preview grid 2 kolom (rutinitas belum selesai) -->
+    ${upcomingHtml}
+
+    <!-- Link ke semua rutinitas -->
+    <button onclick="window.app.switchTab('routines')" 
+      class="mt-4 w-full text-center text-xs text-primary hover:underline">
+      Lihat semua rutinitas →
+    </button>
+  </div>
+`;
   }
 };
 

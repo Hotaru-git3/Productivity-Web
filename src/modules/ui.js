@@ -39,14 +39,14 @@ export const updateDashboardInfo = async () => {
         const data = await fetchWeatherAuto(pos.coords.latitude, pos.coords.longitude);
         if (data) {
           weatherEl.innerHTML = `
-            <div class="flex items-center gap-3 bg-white/5 backdrop-blur-sm p-2 px-4 rounded-2xl border border-white/10 shadow-sm animate-fade-in">
-              <i class="fa-solid ${data.iconClass} text-2xl"></i>
-              <div class="text-left">
-                <p class="text-xl font-bold leading-none">${data.temp}°C</p>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">${data.area} - ${data.desc}</p>
-              </div>
-            </div>
-          `;
+  <div class="flex items-center gap-3 bg-white dark:bg-darkCard p-2 px-4 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm animate-fade-in">
+    <i class="fa-solid ${data.iconClass} text-2xl"></i>
+    <div class="text-left">
+      <p class="text-xl font-bold leading-none">${data.temp}°C</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">${data.area} - ${data.desc}</p>
+    </div>
+  </div>
+`;
         }
       },
       (err) => {

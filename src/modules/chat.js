@@ -81,29 +81,44 @@ export const ChatManager = {
     const userPhoto = user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || "User")}&background=6366F1&color=fff`;
 
     const msgDiv = document.createElement("div");
-    msgDiv.className = `flex gap-3 ${isUser ? "justify-end" : ""} animate-fade-in mb-4`;
+    msgDiv.className = `flex gap-2 sm:gap-3 ${isUser ? "justify-end" : ""} animate-fade-in mb-3 sm:mb-4`;
+    
+    // Batasi lebar bubble di desktop, full di mobile
+    const bubbleMaxWidth = isUser ? "max-w-[85%] sm:max-w-[75%]" : "max-w-[90%] sm:max-w-[80%]";
 
     if (isUser) {
       msgDiv.innerHTML = `
-        <div class="flex flex-col items-end max-w-[80%]">
-          ${text ? `<div class="bg-primary text-white p-3 rounded-2xl rounded-tr-none text-sm shadow-md">${escapeHtml(text)}</div>` : ""}
+        <div class="flex flex-col items-end ${bubbleMaxWidth}">
+          ${text ? `<div class="bg-primary text-white p-2.5 sm:p-3 rounded-2xl rounded-tr-none text-sm shadow-md break-words">${escapeHtml(text)}</div>` : ""}
         </div>
-        <img class="w-8 h-8 rounded-full object-cover shrink-0 border border-gray-100 dark:border-gray-700 shadow-sm" src="${userPhoto}">
+        <img class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover shrink-0 border border-gray-100 dark:border-gray-700 shadow-sm" src="${userPhoto}">
       `;
     } else {
       const formattedText = text ? text.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>") : "";
       msgDiv.innerHTML = `
-        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white flex-shrink-0">
-          <i class="fa-solid fa-robot"></i>
+        <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white flex-shrink-0 shadow-md">
+          <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
         </div>
-        <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-none text-sm max-w-[80%] text-gray-800 dark:text-gray-200 shadow-sm leading-relaxed">
+        <div class="bg-gray-100 dark:bg-gray-800 p-2.5 sm:p-3 rounded-2xl rounded-tl-none text-xs sm:text-sm ${bubbleMaxWidth} text-gray-800 dark:text-gray-200 shadow-sm leading-relaxed break-words">
           ${formattedText}
         </div>
       `;
     }
 
     box.appendChild(msgDiv);
-    box.scrollTop = box.scrollHeight;
+    this.scrollToBottom();
+  },
+
+  scrollToBottom() {
+    const box = document.getElementById("chatBox");
+    if (box) {
+      setTimeout(() => {
+        box.scrollTo({
+          top: box.scrollHeight,
+          behavior: "smooth"
+        });
+      }, 100);
+    }
   },
 
   async sendMessage(e) {
@@ -212,14 +227,15 @@ export const ChatManager = {
       if (isImage && previewImg) {
         previewImg.src = event.target.result;
         previewImg.classList.remove("hidden");
+        previewImg.className = "h-12 w-auto rounded-md object-cover border border-gray-200 dark:border-gray-700";
       } else if (previewContainer) {
         const existingPreview = document.getElementById("docPreviewIcon");
         if (existingPreview) existingPreview.remove();
 
         const docPreview = document.createElement("div");
         docPreview.id = "docPreviewIcon";
-        docPreview.className = "flex items-center gap-2 p-2 px-4 bg-gray-200 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-200";
-        docPreview.innerHTML = `<i class="fa-solid fa-file-lines text-primary"></i> <span class="text-xs truncate max-w-[100px]">${file.name}</span>`;
+        docPreview.className = "flex items-center gap-2 p-1.5 px-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300 text-sm";
+        docPreview.innerHTML = `<i class="fa-solid fa-file-lines text-primary"></i> <span class="text-xs truncate max-w-[120px]">${file.name}</span>`;
         previewContainer.insertBefore(docPreview, document.getElementById("removeImageBtn"));
       }
 
@@ -253,18 +269,18 @@ export const ChatManager = {
     loadingId = id;
 
     box.insertAdjacentHTML("beforeend", `
-      <div id="${id}" class="flex gap-3 mb-4">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white">
-          <i class="fa-solid fa-robot"></i>
+      <div id="${id}" class="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
+        <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white flex-shrink-0 shadow-md">
+          <i class="fa-solid fa-robot text-xs sm:text-sm"></i>
         </div>
-        <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-none text-sm flex items-center gap-1">
-          <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-          <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
-          <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+        <div class="bg-gray-100 dark:bg-gray-800 p-2.5 sm:p-3 rounded-2xl rounded-tl-none text-sm flex items-center gap-1">
+          <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0s"></span>
+          <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
+          <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
         </div>
       </div>
     `);
-    box.scrollTop = box.scrollHeight;
+    this.scrollToBottom();
   },
 
   hideLoading() {

@@ -366,6 +366,7 @@
 </div>
             
             <div id="routineWidget" class="mb-8"></div>
+            <div id="studyWidget" class="mb-8"></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div
                 class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
@@ -437,7 +438,7 @@
   <span class="text-gradient">Task Progress</span>
 </h3>
                 <div
-                  class="relative w-full max-w-[200px] mx-auto aspect-square"
+                  class="relative w-full max-w-[280px] md:max-w-[220px] lg:max-w-[200px] mx-auto aspect-square"
                 >
                   <div id="taskChart"></div>
                 </div>
@@ -452,6 +453,9 @@
                 <ul id="upNextList" class="space-y-3"></ul>
               </div>
             </div>
+
+            
+
             <div
               class="glass-card card-animate p-6 rounded-2xl border-gray-100 dark:border-gray-800"
             >
@@ -479,21 +483,19 @@
             </div>
           </section>
 
-          <!-- ROUTINES TAB -->
-          <section id="routines" class="tab-content hidden animate-fade-in">
-            <div
-              class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6"
-            >
-              <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Daily Routine</span>📋</h2>
-              <button
-                onclick="window.routineManager.openAddModal()"
-                class="btn-primary glow px-4 py-2 rounded-lg text-white hover:bg-indigo-600 transition flex items-center justify-center gap-2 w-full sm:w-auto"
-              >
-                <i class="fa-solid fa-plus"></i> Tambah Rutinitas
-              </button>
-            </div>
-            <div id="routinesContainer"></div>
-          </section>
+          
+<!-- ROUTINES TAB -->
+<!-- ROUTINES TAB -->
+<section id="routines" class="tab-content hidden animate-fade-in">
+  <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
+  <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Daily Routine</span>📋</h2>
+  <button onclick="window.routineManager.openAddModal()" 
+    class="btn-primary glow px-4 py-2 rounded-lg text-white transition flex items-center justify-center gap-2 w-full sm:w-auto">
+    <i class="fa-solid fa-plus"></i> Tambah Rutinitas
+  </button>
+</div>
+  <div id="routinesContainer"></div>
+</section>
 
           <!-- TASKS TAB -->
           <section id="tasks" class="tab-content hidden animate-fade-in">
@@ -557,23 +559,17 @@
             </div>
           </section>
 
-          <!-- NOTES TAB -->
-          <section id="notes" class="tab-content hidden animate-fade-in">
-            <div class="flex justify-between items-center mb-6">
-               <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Notes Kuliah</span>📚</h2>
-              <button
-                onclick="window.noteManager.openModal()"
-                class="btn-primary glow px-4 py-2 rounded-lg 
-                hover:bg-indigo-600 transition shadow-sm"
-              >
-                <i class="fa-solid fa-plus"></i> Buat Note
-              </button>
-            </div>
-            <div
-              id="notesGrid"
-              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            ></div>
-          </section>
+<!-- NOTES TAB -->
+<section id="notes" class="tab-content hidden animate-fade-in">
+  <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
+  <h2 class="text-2xl font-bold"><span class="text-gradient px-2">Notes Kuliah</span>📚</h2>
+  <button onclick="window.routineManager.openAddModal()" 
+    class="btn-primary glow px-4 py-2 rounded-lg text-white transition flex items-center justify-center gap-2 w-full sm:w-auto">
+    <i class="fa-solid fa-plus"></i> Buat Note
+  </button>
+</div>
+  <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</section>
 
           <!-- CHAT TAB -->
           <section
@@ -841,6 +837,7 @@
                   </div>
                 </div>
               </div>
+              <div id="weeklyFocusChart"></div>
             </div>
           </section>
 

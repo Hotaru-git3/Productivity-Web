@@ -14,16 +14,7 @@ import { initToast, showToast, showTaskCompleteToast, showDeadlineToast } from "
 import { RoutineManager } from "./modules/routines";
 import { ProfileManager } from "./modules/profile";
 import { SettingsManager } from "./modules/settings";
-
-// Di DOMContentLoaded
-
-
-// Export ke global (opsional)
-
-
-// Panggil load saat user login
-// Di UI.renderAuthState, tambahin:
-
+import { StudyTracker } from "./modules/studyTracker";
 
 // Expose globally for HTML onclick handlers
 window.app = { switchTab: (tab) => UI.switchTab(tab) };
@@ -52,6 +43,11 @@ window.addEventListener("routines-updated", () => {
   }
 });
 
+window.addEventListener("session-logged", async () => {
+  await StudyTracker.renderDashboardWidget();
+  await StudyTracker.renderToolsChart();
+});
+
 // Reminder modal functions
 window.showReminderModal = async (taskId, taskTitle) => {
   const title = prompt("Judul reminder:", taskTitle ? `Selesaikan: ${taskTitle}` : "");
@@ -76,28 +72,28 @@ window.shareNote = (id) => NoteManager.share(id);
 
 // Confirm modal
 window.confirmModal = {
-    close() {
-        const modal = document.getElementById("confirmModal");
-        if (modal) {
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
-        }
-        AppState.pendingDelete = null;
-    },
-    async confirm() {
-        const pending = AppState.pendingDelete;
-        if (pending) {
-            console.log("🗑️ Confirming delete:", pending);
-            if (pending.type === "task") {
-                await TaskManager.delete(pending.id);
-            } else if (pending.type === "note") {
-                await NoteManager.delete(pending.id);
-            } else if (pending.type === "chat") {
-                await ChatManager.clearHistory();
-            }
-        }
-        this.close();
-    },
+  close() {
+    const modal = document.getElementById("confirmModal");
+    if (modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+    AppState.pendingDelete = null;
+  },
+  async confirm() {
+    const pending = AppState.pendingDelete;
+    if (pending) {
+      console.log("🗑️ Confirming delete:", pending);
+      if (pending.type === "task") {
+        await TaskManager.delete(pending.id);
+      } else if (pending.type === "note") {
+        await NoteManager.delete(pending.id);
+      } else if (pending.type === "chat") {
+        await ChatManager.clearHistory();
+      }
+    }
+    this.close();
+  },
 };
 
 // Event listeners
@@ -155,7 +151,7 @@ window.handleResetPassword = async () => {
   closeResetModal();
 };
 
-// ========== LOGIN TAB SWITCHING (SIMPLE VERSION) ==========
+// ========== LOGIN TAB SWITCHING (SEDERHANA) ==========
 function initLoginTabs() {
   const tabLogin = document.getElementById("tabLogin");
   const tabRegister = document.getElementById("tabRegister");
@@ -164,66 +160,28 @@ function initLoginTabs() {
 
   if (!tabLogin || !tabRegister || !loginForm || !registerForm) return;
 
-  // Reset semua class terlebih dahulu
-  const resetTabs = () => {
-    [tabLogin, tabRegister].forEach(tab => {
-      tab.classList.remove("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
-      tab.classList.add("text-gray-500", "dark:text-gray-400", "bg-transparent");
-    });
-  };
-
-  // Fungsi aktifkan tab login
-  const activateLoginTab = () => {
-    resetTabs();
+  const activateLogin = () => {
     loginForm.classList.remove("hidden");
     registerForm.classList.add("hidden");
     tabLogin.classList.add("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
-    tabLogin.classList.remove("text-gray-500", "dark:text-gray-400", "bg-transparent");
+    tabRegister.classList.remove("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
+    tabRegister.classList.add("text-gray-500", "dark:text-gray-400");
   };
 
-  // Fungsi aktifkan tab register
-  const activateRegisterTab = () => {
-    resetTabs();
+  const activateRegister = () => {
     registerForm.classList.remove("hidden");
     loginForm.classList.add("hidden");
     tabRegister.classList.add("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
-    tabRegister.classList.remove("text-gray-500", "dark:text-gray-400", "bg-transparent");
+    tabLogin.classList.remove("bg-white", "dark:bg-gray-700", "shadow-sm", "text-gray-800", "dark:text-white");
+    tabLogin.classList.add("text-gray-500", "dark:text-gray-400");
   };
 
-  // Hapus event listener lama (pakai off dulu kalo pake jQuery, ini vanilla)
-  tabLogin.removeEventListener("click", activateLoginTab);
-  tabRegister.removeEventListener("click", activateRegisterTab);
-  
-  // Pasang event listener baru
-  tabLogin.addEventListener("click", activateLoginTab);
-  tabRegister.addEventListener("click", activateRegisterTab);
+  tabLogin.addEventListener("click", activateLogin);
+  tabRegister.addEventListener("click", activateRegister);
 }
 
-// Panggil setelah DOM ready
-document.addEventListener("DOMContentLoaded", () => {
-  initLoginTabs();
-  // ... kode init lo yang lain
-});
-
-// Tab切换
-document.getElementById("tabLogin")?.addEventListener("click", () => {
-  document.getElementById("loginForm").classList.remove("hidden");
-  document.getElementById("registerForm").classList.add("hidden");
-  document.getElementById("tabLogin").classList.add("border-b-2", "border-primary", "text-primary");
-  document.getElementById("tabRegister").classList.remove("border-b-2", "border-primary", "text-primary");
-  document.getElementById("tabRegister").classList.add("text-gray-500");
-});
-
-document.getElementById("tabRegister")?.addEventListener("click", () => {
-  document.getElementById("registerForm").classList.remove("hidden");
-  document.getElementById("loginForm").classList.add("hidden");
-  document.getElementById("tabRegister").classList.add("border-b-2", "border-primary", "text-primary");
-  document.getElementById("tabLogin").classList.remove("border-b-2", "border-primary", "text-primary");
-  document.getElementById("tabLogin").classList.add("text-gray-500");
-});
-
-// DOM Ready
-document.addEventListener("DOMContentLoaded", () => {
+// ========== DOM CONTENT LOADED (GABUNG SEMUA) ==========
+document.addEventListener("DOMContentLoaded", async () => {
   initToast();
   UI.init();
   Pomodoro.init();
@@ -232,65 +190,27 @@ document.addEventListener("DOMContentLoaded", () => {
   RoutineManager.initModalListener();
   ProfileManager.init();
   SettingsManager.init();
-  // Dashboard.initResizeListener();
 
-  const originalRenderAuthState = UI.renderAuthState;
-  UI.renderAuthState = function(user) {
-    originalRenderAuthState.call(this, user);
-    if (user) {
-      setTimeout(() => ProfileManager.updateUserInfo(), 100);
-    }
-  };
-
-  // 🔥 TAMBAHKAN INI - Request notification permission after user interaction
-  const requestNotificationAfterInteraction = async () => {
-    console.log("👆 User interaction detected, requesting notification permission...");
-    if (window.NotificationManager) {
-      const granted = await window.NotificationManager.requestPermissionWithInteraction();
-      if (granted) {
-        console.log("✅ Notification permission granted after interaction");
-        // Kirim test notification
-        window.NotificationManager.send(
-          "🔔 Notifikasi Aktif!",
-          "Notifikasi akan muncul untuk deadline tugas dan pengingat lainnya.",
-          { tag: "welcome", silent: true }
-        );
-      } else {
-        console.log("❌ Notification permission denied");
-      }
-    }
-    // Hapus listener setelah sekali jalan
-    document.removeEventListener("click", handleFirstInteraction);
-    document.removeEventListener("touchstart", handleFirstInteraction);
-  };
-  
-  const handleFirstInteraction = () => {
-    requestNotificationAfterInteraction();
-  };
-  
-  // Tunggu user melakukan interaksi pertama (klik/tap di mana saja)
-  document.addEventListener("click", handleFirstInteraction);
-  document.addEventListener("touchstart", handleFirstInteraction);
-  
-  // Timeout 10 detik, kalau ga ada interaksi, skip (biar ga numpuk listener)
-  setTimeout(() => {
-    document.removeEventListener("click", handleFirstInteraction);
-    document.removeEventListener("touchstart", handleFirstInteraction);
-  }, 10000);
+  // Load study tracker widgets
+  await StudyTracker.renderDashboardWidget();
+  await StudyTracker.renderToolsChart();
 
   // Form handlers
   document.getElementById("taskForm")?.addEventListener("submit", (e) => TaskManager.add(e));
   document.getElementById("noteForm")?.addEventListener("submit", (e) => NoteManager.save(e));
   document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => window.confirmModal.confirm());
   document.getElementById("globalSearch")?.addEventListener("input", (e) => {
-  const searchTerm = e.target.value;
-  UI.switchTab("notes");
-  NoteManager.render(searchTerm);
-  NoteManager.updateSearchInURL(searchTerm);
-});
+    const searchTerm = e.target.value;
+    UI.switchTab("notes");
+    NoteManager.render(searchTerm);
+    NoteManager.updateSearchInURL(searchTerm);
+  });
   document.getElementById("fileInput")?.addEventListener("change", (e) => ChatManager.handleFileSelect(e));
   document.getElementById("removeImageBtn")?.addEventListener("click", () => ChatManager.clearAttachment());
   document.getElementById("chatForm")?.addEventListener("submit", (e) => ChatManager.sendMessage(e));
+
+  // Login tabs
+  initLoginTabs();
 
   // Start auth monitoring
   AuthManager.monitorState();
@@ -299,6 +219,21 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(() => {
     saveToLocalStorage("activityLog", AppState.activityLog);
   }, 60000);
+
+  // Notification interaction
+  const handleFirstInteraction = async () => {
+    if (window.NotificationManager) {
+      await window.NotificationManager.requestPermissionWithInteraction?.();
+    }
+    document.removeEventListener("click", handleFirstInteraction);
+    document.removeEventListener("touchstart", handleFirstInteraction);
+  };
+  document.addEventListener("click", handleFirstInteraction);
+  document.addEventListener("touchstart", handleFirstInteraction);
+  setTimeout(() => {
+    document.removeEventListener("click", handleFirstInteraction);
+    document.removeEventListener("touchstart", handleFirstInteraction);
+  }, 10000);
 });
 
 // ========== NOTIFICATION & REMINDER SCHEDULER ==========
@@ -306,11 +241,9 @@ let reminderInterval = null;
 let dailySummaryTimeout = null;
 
 const startReminderScheduler = () => {
-  // Stop existing scheduler
   if (reminderInterval) clearInterval(reminderInterval);
   if (dailySummaryTimeout) clearTimeout(dailySummaryTimeout);
 
-  // Check deadlines every 15 minutes
   reminderInterval = setInterval(async () => {
     if (window.NotificationManager) {
       await window.NotificationManager.checkDeadlines();
@@ -318,66 +251,39 @@ const startReminderScheduler = () => {
     }
   }, 15 * 60 * 1000);
 
-  // Schedule daily summary at 7 AM
   const scheduleDailySummary = async () => {
     const now = new Date();
     const next7AM = new Date();
     next7AM.setHours(7, 0, 0, 0);
-    
-    if (now >= next7AM) {
-      next7AM.setDate(next7AM.getDate() + 1);
-    }
-    
+    if (now >= next7AM) next7AM.setDate(next7AM.getDate() + 1);
     const timeUntil7AM = next7AM - now;
-    
     dailySummaryTimeout = setTimeout(async () => {
-      if (window.NotificationManager) {
-        await window.NotificationManager.sendDailySummary();
-      }
+      if (window.NotificationManager) await window.NotificationManager.sendDailySummary();
       scheduleDailySummary();
     }, timeUntil7AM);
   };
-  
   scheduleDailySummary();
-  
   console.log("✅ Reminder scheduler started");
 };
 
 const stopReminderScheduler = () => {
-  if (reminderInterval) {
-    clearInterval(reminderInterval);
-    reminderInterval = null;
-  }
-  if (dailySummaryTimeout) {
-    clearTimeout(dailySummaryTimeout);
-    dailySummaryTimeout = null;
-  }
+  if (reminderInterval) clearInterval(reminderInterval);
+  if (dailySummaryTimeout) clearTimeout(dailySummaryTimeout);
+  reminderInterval = null;
+  dailySummaryTimeout = null;
   console.log("⏸️ Reminder scheduler stopped");
 };
 
-// Request notification permission on user interaction
-const requestNotificationPermission = async () => {
-  if ("Notification" in window) {
-    if (Notification.permission === "default") {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        console.log("✅ Notification permission granted");
-      }
-    }
-  }
-};
-
-// Monitor auth state to start/stop scheduler
+// Override renderAuthState biar study tracker jalan
 const originalRenderAuthState = UI.renderAuthState;
-UI.renderAuthState = function(user) {
+UI.renderAuthState = async function(user) {
   originalRenderAuthState.call(this, user);
   if (user) {
-    // Start scheduler
+    await StudyTracker.renderDashboardWidget();
+    await StudyTracker.renderToolsChart();
+    setTimeout(() => ProfileManager.updateUserInfo(), 100);
     startReminderScheduler();
-    // Request notification permission after login
     setTimeout(() => {
-      requestNotificationPermission();
-      // Initial check
       if (window.NotificationManager) {
         window.NotificationManager.checkDeadlines();
         window.NotificationManager.checkCustomReminders();
