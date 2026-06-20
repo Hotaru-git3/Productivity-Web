@@ -8,6 +8,43 @@ const CHATS_COLLECTION = collection(db, "chats");
 let currentFile = null;
 let loadingId = null;
 
+// Security: Validasi input
+function sanitizeInput(text) {
+    if (!text) return "";
+    return text.replace(/[<>]/g, "").trim();
+}
+
+// Security: Validasi file
+function validateFile(file) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "text/plain"];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    if (!allowedTypes.includes(file.type)) {
+        return { valid: false, error: "Tipe file tidak diizinkan" };
+    }
+    if (file.size > maxSize) {
+        return { valid: false, error: "Ukuran file maksimal 5MB" };
+    }
+    return { valid: true };
+}
+
+// Security: Filter response dari AI
+function filterResponse(text) {
+    if (!text) return "";
+    const blockedPatterns = [
+        /ignore previous instructions/i,
+        /forget your instructions/i,
+        /you are now/i,
+        /system prompt/i
+    ];
+    
+    let filtered = text;
+    for (const pattern of blockedPatterns) {
+        filtered = filtered.replace(pattern, "[filtered]");
+    }
+    return filtered;
+}
+
 export const ChatManager = {
   async load() {
     const user = AppState.currentUser;
@@ -55,11 +92,16 @@ export const ChatManager = {
     const user = AppState.currentUser;
     if (!user) return;
 
-    const safeFileInfo = fileInfo ? { name: fileInfo.name, isImage: fileInfo.isImage } : null;
+    const safeText = sanitizeInput(text);
+    const safeFileInfo = fileInfo ? { 
+        name: sanitizeInput(fileInfo.name), 
+        isImage: fileInfo.isImage 
+    } : null;
+    
     try {
       await addDoc(CHATS_COLLECTION, {
         userId: user.uid,
-        text: text || "",
+        text: safeText || "",
         isUser: isUser,
         fileInfo: safeFileInfo,
         timestamp: Date.now()
@@ -83,7 +125,6 @@ export const ChatManager = {
     const msgDiv = document.createElement("div");
     msgDiv.className = `flex gap-2 sm:gap-3 ${isUser ? "justify-end" : ""} animate-fade-in mb-3 sm:mb-4`;
     
-    // Batasi lebar bubble di desktop, full di mobile
     const bubbleMaxWidth = isUser ? "max-w-[85%] sm:max-w-[75%]" : "max-w-[90%] sm:max-w-[80%]";
 
     if (isUser) {
@@ -125,12 +166,33 @@ export const ChatManager = {
     e.preventDefault();
 
     const input = document.getElementById("chatInput");
-    const userText = input?.value.trim() || "";
+    let userText = input?.value.trim() || "";
+    
+    if (userText.length > 4000) {
+      showToast("Pesan terlalu panjang! Maksimal 4000 karakter.", "error");
+      return;
+    }
+    
+    userText = sanitizeInput(userText);
     if (!userText && !currentFile) return;
 
-    const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+    if (currentFile) {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput?.files?.[0];
+      if (file) {
+        const validation = validateFile(file);
+        if (!validation.valid) {
+          showToast(validation.error, "error");
+          this.clearAttachment();
+          return;
+        }
+      }
+    }
+
+    const apiKey = import.meta.env.VITE_NVIDIA_API_KEY;
+    
     if (!apiKey) {
-      showToast("Groq API Key belum dipasang di .env!", "error");
+      showToast("NVIDIA API Key belum dipasang di .env!", "error");
       return;
     }
 
@@ -142,78 +204,138 @@ export const ChatManager = {
     this.showLoading();
 
     try {
-      let contentParts = [{ type: "text", text: userText || "Tolong jelaskan ini." }];
-      let selectedModel = "llama-3.3-70b-versatile";
-
-      if (currentPayload?.base64) {
-        if (currentPayload.isImage) {
-          selectedModel = "meta-llama/llama-4-scout-17b-16e-instruct";
-          contentParts.push({
-            type: "image_url",
-            image_url: { url: `data:${currentPayload.mimeType};base64,${currentPayload.base64}` }
-          });
-        } else {
-          contentParts[0].text = `[User mengirim file ${currentPayload.name}] ${userText}`;
-          showToast("Groq saat ini cuma bisa baca Teks/Gambar.", "warning");
+      // 🔥 MODEL NAME YANG BENAR UNTUK NVIDIA NIM
+      let selectedModel = "deepseek-ai/deepseek-v4-flash";
+      
+      let messages = [
+        {
+          role: "system",
+          content: `You are a helpful AI assistant for a student productivity dashboard. 
+          Provide clear, accurate, and educational responses. 
+          Do not provide harmful, dangerous, or inappropriate content.
+          Keep responses concise and helpful.
+          If you don't know something, say so.`
+        },
+        {
+          role: "user",
+          content: userText || "Tolong jelaskan ini."
         }
+      ];
+
+      let requestBody = {
+        model: selectedModel,
+        messages: messages,
+        temperature: 0.7,
+        top_p: 0.95,
+        max_tokens: 4096,
+        stream: false
+      };
+
+      // 🔥 JIKA ADA GAMBAR
+      if (currentPayload?.base64 && currentPayload.isImage) {
+        requestBody.model = "meta/llama-4-maverick-17b-128e-instruct";
+        requestBody.messages = [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: userText || "Apa yang ada di gambar ini?"
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:${currentPayload.mimeType};base64,${currentPayload.base64}`
+                }
+              }
+            ]
+          }
+        ];
       }
 
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      // 🔥 JIKA ADA PDF/TXT
+      if (currentPayload?.base64 && !currentPayload.isImage) {
+        messages[0].content = `[User mengirim file: ${currentPayload.name}]\n\n${userText || "Tolong jelaskan isi file ini."}`;
+        requestBody.messages = messages;
+        showToast("📄 File akan diproses sebagai teks.", "info");
+      }
+
+      const lastRequest = this._lastRequestTime || 0;
+      const now = Date.now();
+      if (now - lastRequest < 1000) {
+        showToast("Tunggu sebentar sebelum mengirim pesan lagi.", "warning");
+        this.hideLoading();
+        return;
+      }
+      this._lastRequestTime = now;
+
+      // 🔥 PAKAI PROXY
+      console.log("📤 Sending to NVIDIA:", requestBody.model);
+      const response = await fetch("/api/nvidia/chat/completions", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${apiKey}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          model: selectedModel,
-          messages: [{ role: "user", content: contentParts }],
-          temperature: 0.7
-        })
+        body: JSON.stringify(requestBody)
       });
+
+      // 🔥 BACA RESPONSE DENGAN BENAR
+      const responseText = await response.text();
+      console.log("📥 Response status:", response.status);
+      console.log("📥 Response preview:", responseText.substring(0, 200));
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("❌ JSON Parse Error:", parseError);
+        throw new Error("Respons dari server tidak valid. Coba lagi nanti.");
+      }
 
       this.hideLoading();
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error?.message || "Gagal mendapatkan respons dari Groq");
+        console.error("❌ NVIDIA API Error:", data);
+        const errorMsg = data.error?.message || data.message || "Gagal mendapatkan respons dari NVIDIA AI";
+        throw new Error(errorMsg);
       }
 
-      const aiResponse = data.choices[0].message.content;
+      let aiResponse = data.choices?.[0]?.message?.content || "Maaf, saya tidak bisa memberikan respons.";
+      aiResponse = filterResponse(aiResponse);
+      
       this.appendMessage(aiResponse, false, null, true);
 
       if (currentPayload) recordActivity(AppState.activityLog);
     } catch (error) {
+      console.error("❌ Chat error:", error);
       this.hideLoading();
       this.appendMessage(`Error: ${error.message}`, false, null, true);
     }
   },
 
+  _lastRequestTime: 0,
+
   handleFileSelect(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    const allowedDocs = ["application/pdf", "text/plain"];
+    const validation = validateFile(file);
+    if (!validation.valid) {
+      showToast(validation.error, "error");
+      this.clearAttachment();
+      e.target.value = "";
+      return;
+    }
+
     const isImage = file.type.startsWith("image/");
-
-    if (!isImage && !allowedDocs.includes(file.type)) {
-      showToast("Cuma nerima Gambar, PDF, atau TXT!", "error");
-      this.clearAttachment();
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      showToast("Maksimal 5MB ya bro!", "error");
-      this.clearAttachment();
-      return;
-    }
 
     const reader = new FileReader();
     reader.onload = (event) => {
       currentFile = {
         base64: event.target.result.split(",")[1],
         mimeType: file.type,
-        name: file.name,
+        name: sanitizeInput(file.name),
         isImage
       };
 
@@ -235,11 +357,12 @@ export const ChatManager = {
         const docPreview = document.createElement("div");
         docPreview.id = "docPreviewIcon";
         docPreview.className = "flex items-center gap-2 p-1.5 px-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300 text-sm";
-        docPreview.innerHTML = `<i class="fa-solid fa-file-lines text-primary"></i> <span class="text-xs truncate max-w-[120px]">${file.name}</span>`;
+        docPreview.innerHTML = `<i class="fa-solid fa-file-lines text-primary"></i> <span class="text-xs truncate max-w-[120px]">${sanitizeInput(file.name)}</span>`;
         previewContainer.insertBefore(docPreview, document.getElementById("removeImageBtn"));
       }
 
       if (input) input.removeAttribute("required");
+      showToast(`📎 File terupload: ${sanitizeInput(file.name)}`, "success");
     };
     reader.readAsDataURL(file);
   },
@@ -292,6 +415,7 @@ export const ChatManager = {
 };
 
 function escapeHtml(str) {
+  if (!str) return "";
   return str.replace(/[&<>]/g, function(m) {
     if (m === "&") return "&amp;";
     if (m === "<") return "&lt;";

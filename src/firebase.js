@@ -12,7 +12,7 @@ import {
   signOut
 } from "firebase/auth";
 
-// Sekarang kita ambil data dari .env pake import.meta.env
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
